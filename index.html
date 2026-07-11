@@ -123,6 +123,11 @@
                     <i class="fa-solid fa-chart-pie text-lg group-hover:scale-110 transition-transform w-6 text-center"></i>
                     <span class="ml-3">ภาพรวม (Overview)</span>
                 </a>
+                <a href="#" onclick="event.preventDefault(); switchView('bi')" id="nav-bi" class="nav-item flex items-center px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white font-semibold transition-all group relative">
+                    <i class="fa-regular fa-lightbulb text-lg group-hover:scale-110 transition-transform w-6 text-center"></i>
+                    <span class="ml-3 flex-1">วิเคราะห์ธุรกิจ (BI)</span>
+                    <span class="bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full absolute right-4">NEW</span>
+                </a>
                 <a href="#" onclick="event.preventDefault(); switchView('crm')" id="nav-crm-db" class="nav-item flex items-center px-4 py-3 rounded-xl bg-brand-400 text-slate-900 font-bold shadow-md group transition-all">
                     <i class="fa-solid fa-users text-lg group-hover:scale-110 transition-transform w-6 text-center"></i>
                     <span class="ml-3">จัดการฐานลูกค้า</span>
@@ -184,7 +189,7 @@
                 </div>
             </header>
 
-            <div class="flex-1 overflow-y-auto px-4 pb-8 sm:px-8 relative">
+            <div class="flex-1 overflow-y-auto px-4 pb-8 sm:px-8 relative pt-6">
                 
                 <!-- ================= OVERVIEW VIEW ================= -->
                 <div id="overviewView" class="hidden transition-opacity duration-500">
@@ -227,6 +232,95 @@
                         <div class="glass-card rounded-3xl p-8 flex flex-col animate-fade-in-up" style="animation-delay: 0.6s;">
                             <h2 class="text-lg font-extrabold text-slate-900 mb-6 flex items-center"><i class="fa-solid fa-chart-area text-slate-700 mr-3"></i> เปรียบเทียบ ยางเข้า vs ยางขาย</h2>
                             <div class="relative h-72 w-full"><canvas id="stockChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= BI VIEW ================= -->
+                <div id="biView" class="hidden transition-opacity duration-500">
+                    <!-- Loading State -->
+                    <div id="biLoadingState" class="hidden flex flex-col items-center justify-center py-20">
+                        <i class="fa-solid fa-circle-notch fa-spin text-brand-400 text-5xl mb-4"></i>
+                        <p class="text-slate-500 font-bold text-lg animate-pulse">กำลังประมวลผลข้อมูล AI Business Intelligence...</p>
+                        <p class="text-xs text-slate-400 mt-2">อาจใช้เวลาสักครู่ในการรวบรวมข้อมูลทั้งหมด</p>
+                    </div>
+
+                    <!-- Content State -->
+                    <div id="biContent" class="block">
+                        <!-- KPI Row -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div class="glass-card rounded-3xl p-6 relative overflow-hidden animate-fade-in-up">
+                                <div class="absolute top-4 right-4 bg-emerald-100 text-emerald-700 text-[10px] font-black px-3 py-1.5 rounded-lg tracking-wider">ประสิทธิภาพ</div>
+                                <p class="text-xs font-extrabold text-slate-500 mb-2 uppercase tracking-wide">ยอดซื้อเฉลี่ยต่อบิล (AOV)</p>
+                                <h3 class="text-3xl xl:text-4xl font-black text-slate-900 mt-1" id="biAov">฿0</h3>
+                            </div>
+                            <div class="glass-card rounded-3xl p-6 relative overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s;">
+                                <div class="absolute top-4 right-4 bg-blue-100 text-blue-700 text-[10px] font-black px-3 py-1.5 rounded-lg tracking-wider">ความคุ้มค่า</div>
+                                <p class="text-xs font-extrabold text-slate-500 mb-2 uppercase tracking-wide">ยอดซื้อสะสมต่อลูกค้า (CLV Avg.)</p>
+                                <h3 class="text-3xl xl:text-4xl font-black text-slate-900 mt-1" id="biClv">฿0</h3>
+                            </div>
+                            <div class="glass-card rounded-3xl p-6 relative overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s;">
+                                <div class="absolute top-4 right-4 bg-purple-100 text-purple-700 text-[10px] font-black px-3 py-1.5 rounded-lg tracking-wider">ความผูกพัน</div>
+                                <p class="text-xs font-extrabold text-slate-500 mb-2 uppercase tracking-wide">อัตราการกลับมาซื้อซ้ำ (Retention)</p>
+                                <h3 class="text-3xl xl:text-4xl font-black text-slate-900 mt-1" id="biRetention">0%</h3>
+                            </div>
+                        </div>
+
+                        <!-- Charts Row -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                            <div class="glass-card rounded-3xl p-6 animate-fade-in-up" style="animation-delay: 0.3s;">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h3 class="font-extrabold text-slate-900 text-lg">การจัดกลุ่มลูกค้า (RFM)</h3>
+                                        <p class="text-xs text-slate-500">แบ่งตาม พฤติกรรมการซื้อล่าสุด / ความถี่ / ยอดเงิน</p>
+                                    </div>
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center"><i class="fa-solid fa-circle-info text-sm"></i></div>
+                                </div>
+                                <div class="relative h-64 w-full flex justify-center mt-4"><canvas id="biRfmChart"></canvas></div>
+                            </div>
+                            <div class="glass-card rounded-3xl p-6 animate-fade-in-up" style="animation-delay: 0.4s;">
+                                <div class="mb-2">
+                                    <h3 class="font-extrabold text-slate-900 text-lg">รายได้แยกตามช่องทางหาลูกค้า</h3>
+                                    <p class="text-xs text-slate-500">ช่วยตัดสินใจว่าควรลงทุนเวลา/เงินไปกับช่องทางไหน</p>
+                                </div>
+                                <div class="relative h-64 w-full mt-4"><canvas id="biChannelChart"></canvas></div>
+                            </div>
+                        </div>
+
+                        <!-- Insights Row -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-rose-50/50 border border-rose-100 rounded-3xl p-6 shadow-sm animate-fade-in-up" style="animation-delay: 0.5s;">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="font-extrabold text-rose-800 text-lg flex items-center"><i class="fa-solid fa-triangle-exclamation mr-2"></i> ลูกค้าเสี่ยงหาย (เกิน 90 วัน)</h3>
+                                    <span class="bg-rose-200 text-rose-800 text-[10px] font-black px-3 py-1.5 rounded-full tracking-widest" id="biChurnCountBadge">0 ราย</span>
+                                </div>
+                                <p class="text-xs font-semibold text-rose-600/70 mb-6">กลุ่มที่เคยซื้อ แต่นิ่งช่วงที่ผ่านมา ลูกค้าควรโทรทักทายเสนอโปร</p>
+                                <div id="biChurnList" class="space-y-2 max-h-48 overflow-y-auto no-scrollbar pr-1">
+                                    <!-- Injected by JS -->
+                                </div>
+                            </div>
+                            
+                            <div class="bg-amber-50/50 border border-amber-100 rounded-3xl p-6 shadow-sm animate-fade-in-up" style="animation-delay: 0.6s;">
+                                <h3 class="font-extrabold text-amber-900 text-lg mb-1 flex items-center"><i class="fa-solid fa-chess-knight mr-2"></i> Data-driven SWOT Insights</h3>
+                                <p class="text-xs font-semibold text-amber-700/70 mb-8">สรุปจุดแข็ง-จุดอ่อนอัตโนมัติจากตัวเลขจริงในระบบ</p>
+                                
+                                <div class="space-y-6">
+                                    <div class="flex items-start">
+                                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 font-bold flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">S</div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-800 text-sm">จุดแข็ง (Strength)</h4>
+                                            <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed" id="biSwotS">...</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 font-bold flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">W</div>
+                                        <div>
+                                            <h4 class="font-bold text-slate-800 text-sm">จุดอ่อน (Weakness)</h4>
+                                            <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed" id="biSwotW">...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -502,6 +596,7 @@
                 <div class="w-full md:w-1/3 bg-slate-100/50 p-6 rounded-2xl border border-slate-200 h-fit">
                     <h4 class="font-extrabold text-slate-800 mb-4 pb-2 border-b border-slate-200 text-sm uppercase tracking-wide">บันทึกยางล็อตใหม่</h4>
                     <form id="addStockInForm" class="space-y-4">
+                        <input type="hidden" id="editStockInRowIndex" value="">
                         <div><label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">วันที่เข้า</label><input type="text" id="stockInDate" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl outline-none font-semibold text-sm"></div>
                         <div><label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">จำนวน (เส้น)</label><input type="number" id="stockInQty" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl outline-none font-semibold text-sm"></div>
                         <div><label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">หมายเหตุ / ล็อต</label><input type="text" id="stockInNote" placeholder="เช่น ทะเบียนรถ" class="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl outline-none font-semibold text-sm"></div>
@@ -520,7 +615,7 @@
                         <table class="w-full text-left border-collapse whitespace-nowrap">
                             <thead class="sticky top-0 bg-white/90 backdrop-blur-sm shadow-sm z-10">
                                 <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">
-                                    <th class="px-5 py-3">วันที่</th><th class="px-5 py-3 text-slate-800">จำนวน (เส้น)</th><th class="px-5 py-3">หมายเหตุ</th>
+                                    <th class="px-5 py-3">วันที่</th><th class="px-5 py-3 text-slate-800">จำนวน (เส้น)</th><th class="px-5 py-3">หมายเหตุ</th><th class="px-5 py-3 text-center">จัดการ</th>
                                 </tr>
                             </thead>
                             <tbody class="text-sm divide-y divide-slate-100 font-medium text-slate-600" id="stockInHistoryBody"></tbody>
@@ -552,7 +647,7 @@
 
     <script>
         // ⚠️ สำคัญ: นำ Web App URL ของคุณมาวางตรงนี้ ⚠️
-        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJUN6rs2vjBcI1c_j9FUMM0MKPbueIXngCUqZ8kz9WgyosXpzjmHDHl4FLznQcAc4M/exec"; 
+        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxoJJw-tlAI2EfvNicL-LygDR9ZW7PMxvuha1g3Eq7BHPzozWD1GoFTbFq14ccQ9JyIjg/exec"; 
         const APP_PIN = "8899"; // รหัสผ่านเข้าเว็บ
         const ACTION_PIN = "2233"; // 🟢 รหัสผ่านสำหรับเพิ่ม/แก้ไข/ลบข้อมูล
 
@@ -560,10 +655,15 @@
         let currentSalesMonth = '';
         let currentStockInLog = [];
         let maxMemberIdNum = 0;
-        let globalMembersList = []; // เพิ่มตัวแปรสำหรับเก็บรายชื่อลูกค้ามาเทียบในตารางขาย
+        let globalMembersList = []; // เก็บรายชื่อลูกค้ามาเทียบในตารางขาย
         let revChartObj = null;
         let stockChartObj = null;
-        let actionPinResolve = null; // 🟢 ตัวแปรสำหรับรอดักการตอบกลับของ Action PIN
+        let actionPinResolve = null; // ตัวแปรสำหรับรอดักการตอบกลับของ Action PIN
+
+        // 🟢 เพิ่มตัวแปรสำหรับกราฟ BI
+        let biRfmChartObj = null;
+        let biChannelChartObj = null;
+        let isBiDataLoaded = false;
 
         Chart.defaults.font.family = "'Sarabun', 'Inter', sans-serif";
         Chart.defaults.color = '#64748b'; // Text color for charts
@@ -656,14 +756,12 @@
             const sidebar = document.getElementById('mobileSidebar');
             const overlay = document.getElementById('mobileOverlay');
 
-            // ถ้าเมนูปิดอยู่ (-translate-x-[150%]) ให้กางออก
             if (sidebar.classList.contains('-translate-x-[150%]')) {
                 sidebar.classList.remove('-translate-x-[150%]');
                 sidebar.classList.add('translate-x-0');
                 overlay.classList.remove('hidden');
                 setTimeout(() => overlay.classList.remove('opacity-0'), 10);
             } 
-            // ถ้าเมนูกางอยู่ ให้พับเก็บ
             else {
                 sidebar.classList.remove('translate-x-0');
                 sidebar.classList.add('-translate-x-[150%]');
@@ -696,21 +794,24 @@
                 }
             }
             
-            // 🟢 รีเซ็ตคลาสของเมนูทั้งหมดให้เป็นสีเทาเข้มแบบปกติตามดีไซน์ใหม่
+            // รีเซ็ตคลาสของเมนูทั้งหมด
             document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('bg-brand-400', 'text-slate-900', 'shadow-md', 'font-bold');
+                el.classList.remove('bg-brand-400', 'text-slate-900', 'shadow-md', 'font-bold', 'text-white');
                 el.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white', 'font-semibold');
+            });
+
+            // ซ่อนทุกหน้าต่างก่อน
+            ['overviewView', 'biView', 'crmView', 'salesView'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
             });
 
             if (viewName === 'overview') {
                 document.getElementById('overviewView').classList.remove('hidden');
-                document.getElementById('crmView').classList.add('hidden');
-                document.getElementById('salesView').classList.add('hidden');
                 document.getElementById('headerTitle').innerText = 'ภาพรวม (Overview)';
                 document.getElementById('headerSubtitle').innerText = 'สรุปสถิติประจำปีและกราฟวิเคราะห์';
                 document.getElementById('mainAddBtn').classList.add('hidden');
                 
-                // 🟢 ไฮไลต์สีเหลืองเมนูที่ถูกเลือก
                 const activeNav = document.getElementById('nav-overview');
                 if(activeNav) { 
                     activeNav.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-white', 'font-semibold'); 
@@ -719,10 +820,24 @@
                 
                 fetchOverviewData();
 
+            } else if (viewName === 'bi') {
+                // 🟢 กรณีเปิดหน้า BI
+                document.getElementById('biView').classList.remove('hidden');
+                document.getElementById('headerTitle').innerText = 'วิเคราะห์ธุรกิจ (Business Intelligence)';
+                document.getElementById('headerSubtitle').innerText = 'ผู้ช่วยวางแผนกลยุทธ์เติบโต (Growth Strategist)';
+                document.getElementById('mainAddBtn').classList.add('hidden');
+                
+                const activeNav = document.getElementById('nav-bi');
+                if(activeNav) { 
+                    activeNav.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-white', 'font-semibold'); 
+                    activeNav.classList.add('bg-brand-400', 'text-slate-900', 'shadow-md', 'font-bold'); 
+                }
+                
+                // เรียกฟังก์ชันประมวลผลข้อมูลถ้ายังไม่เคยโหลด
+                if (!isBiDataLoaded) fetchAndCalculateBI();
+
             } else if (viewName === 'crm') {
-                document.getElementById('overviewView').classList.add('hidden');
                 document.getElementById('crmView').classList.remove('hidden');
-                document.getElementById('salesView').classList.add('hidden');
                 document.getElementById('headerTitle').innerText = 'จัดการฐานข้อมูลลูกค้า';
                 document.getElementById('headerSubtitle').innerText = 'ระบบสมาชิก โกดังยางรถบรรทุก สระบุรี';
                 document.getElementById('mainAddBtn').classList.remove('hidden');
@@ -737,8 +852,6 @@
                 fetchMembersData();
 
             } else if (viewName === 'sales') {
-                document.getElementById('overviewView').classList.add('hidden');
-                document.getElementById('crmView').classList.add('hidden');
                 document.getElementById('salesView').classList.remove('hidden');
                 document.getElementById('headerTitle').innerText = `รายการขาย (${month})`;
                 document.getElementById('headerSubtitle').innerText = `แดชบอร์ดสรุปยอดขายประจำเดือน${month}`;
@@ -834,7 +947,10 @@
             document.getElementById('stockInModalMonthText').innerText = `(${currentSalesMonth})`;
             const today = new Date();
             document.getElementById('stockInDate').value = `${today.getDate()}/${today.getMonth()+1}/${today.getFullYear().toString().substr(-2)}`;
-            document.getElementById('stockInQty').value = ''; document.getElementById('stockInNote').value = '';
+            document.getElementById('stockInQty').value = ''; 
+            document.getElementById('stockInNote').value = '';
+            document.getElementById('editStockInRowIndex').value = ''; 
+            document.getElementById('submitStockInBtn').innerHTML = '<i class="fa-solid fa-plus mr-2"></i> บันทึกเข้าระบบ';
             document.getElementById('stockInFormMsg').classList.add('hidden');
             
             renderStockInLog();
@@ -854,40 +970,32 @@
             if (!url) return null;
             let fileId = null;
             
-            // รูปแบบที่ 1: https://drive.google.com/file/d/FILE_ID/view
             const driveMatch = url.match(/\/d\/(.+?)\//);
             if (driveMatch && driveMatch[1]) fileId = driveMatch[1];
             
-            // รูปแบบที่ 2: https://drive.google.com/open?id=FILE_ID
             const openMatch = url.match(/id=(.+?)(&|$)/);
             if (openMatch && openMatch[1]) fileId = openMatch[1];
             
             if (fileId) {
-                // ใช้เซิร์ฟเวอร์ lh3 ของ Google ช่วยเลี่ยงการถูกบล็อก
                 return `https://lh3.googleusercontent.com/d/${fileId}`;
             }
-            
-            // ถ้ารูปแบบเป็นเว็บปกติ (http) ให้ส่งคืนค่าเดิม
             if (url.startsWith('http')) return url;
-            
             return null;
         }
 
-        // 🟢 ฟังก์ชันช่วยเหลือสำหรับแปลงรูปแบบวันที่จากยาวๆ ให้สั้นลง (เช่น 2026-06-04T... -> 04/06/2026)
+        // 🟢 ฟังก์ชันช่วยเหลือสำหรับแปลงรูปแบบวันที่
         function formatDateString(dateStr) {
             if (!dateStr || dateStr === '-') return '-';
             try {
-                // เช็คว่าถ้าเป็นรูปแบบ ISO date string
                 if (dateStr.includes('T')) {
                     const d = new Date(dateStr);
                     if (!isNaN(d.getTime())) {
                         const day = String(d.getDate()).padStart(2, '0');
                         const month = String(d.getMonth() + 1).padStart(2, '0');
-                        const year = String(d.getFullYear()).substr(-2); // เอาแค่ 2 หลักท้าย
+                        const year = String(d.getFullYear()).substr(-2); 
                         return `${day}/${month}/${year}`;
                     }
                 }
-                // ถ้าเป็นรูปแบบอื่นๆ หรือแปลงไม่ได้ ก็คืนค่าเดิมไปก่อน
                 return dateStr;
             } catch (e) {
                 return dateStr;
@@ -907,10 +1015,41 @@
                 document.getElementById('ovCurrentStock').innerText = ((d.totalStockIn || 0) - (d.totalSold || 0)).toLocaleString();
 
                 if (d.labels && d.labels.length > 0) {
+                    
+                    const thaiMonths = {
+                        "มกราคม": 1, "กุมภาพันธ์": 2, "มีนาคม": 3, "เมษายน": 4,
+                        "พฤษภาคม": 5, "มิถุนายน": 6, "กรกฎาคม": 7, "สิงหาคม": 8,
+                        "กันยายน": 9, "ตุลาคม": 10, "พฤศจิกายน": 11, "ธันวาคม": 12
+                    };
+                    
+                    let combinedData = [];
+                    for (let i = 0; i < d.labels.length; i++) {
+                        let labelName = d.labels[i];
+                        let monthOrder = 99; 
+                        for (const [mName, mIndex] of Object.entries(thaiMonths)) {
+                            if (labelName.includes(mName)) { monthOrder = mIndex; break; }
+                        }
+                        
+                        combinedData.push({
+                            label: labelName,
+                            revenue: d.revenue[i] || 0,
+                            stockIn: d.stockIn[i] || 0,
+                            sold: d.sold[i] || 0,
+                            order: monthOrder
+                        });
+                    }
+                    
+                    combinedData.sort((a, b) => a.order - b.order);
+                    
+                    const sortedLabels = combinedData.map(item => item.label);
+                    const sortedRevenue = combinedData.map(item => item.revenue);
+                    const sortedStockIn = combinedData.map(item => item.stockIn);
+                    const sortedSold = combinedData.map(item => item.sold);
+
                     if (revChartObj) revChartObj.destroy();
                     revChartObj = new Chart(document.getElementById('revenueChart'), { 
                         type: 'bar', 
-                        data: { labels: d.labels, datasets: [{ label: 'ยอดขาย (บาท)', data: d.revenue || [], backgroundColor: '#facc15', borderRadius: 8 }] }, 
+                        data: { labels: sortedLabels, datasets: [{ label: 'ยอดขาย (บาท)', data: sortedRevenue, backgroundColor: '#facc15', borderRadius: 8 }] }, 
                         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } 
                     });
 
@@ -918,10 +1057,10 @@
                     stockChartObj = new Chart(document.getElementById('stockChart'), { 
                         type: 'line', 
                         data: { 
-                            labels: d.labels, 
+                            labels: sortedLabels, 
                             datasets: [
-                                { label: 'รับเข้า', data: d.stockIn || [], borderColor: '#1e293b', backgroundColor: 'rgba(30, 41, 59, 0.1)', fill: true, tension: 0.4 }, 
-                                { label: 'ขายออก', data: d.sold || [], borderColor: '#eab308', backgroundColor: 'transparent', tension: 0.4, borderDash: [5, 5] }
+                                { label: 'รับเข้า', data: sortedStockIn, borderColor: '#1e293b', backgroundColor: 'rgba(30, 41, 59, 0.1)', fill: true, tension: 0.4 }, 
+                                { label: 'ขายออก', data: sortedSold, borderColor: '#eab308', backgroundColor: 'transparent', tension: 0.4, borderDash: [5, 5] }
                             ] 
                         }, 
                         options: { responsive: true, maintainAspectRatio: false } 
@@ -960,7 +1099,6 @@
                         
                         const rowDataStr = encodeURIComponent(JSON.stringify(m));
                         
-                        // 🟢 ส่วนประมวลผลรูปภาพ
                         const directImgUrl = getDirectImageUrl(m.contactPath);
                         const fallbackIcon = `<div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-400 text-lg shadow-inner"><i class="fa-solid fa-user"></i></div>`;
                         
@@ -968,7 +1106,6 @@
                             ? `<img src="${directImgUrl}" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-md" onerror="this.onerror=null; this.outerHTML='${fallbackIcon.replace(/'/g, "\\'")}';">` 
                             : fallbackIcon;
 
-                        // 🟢 ส่วนประมวลผลเบอร์โทรศัพท์ (เติม 0 ด้านหน้าถ้า Google Sheets ตัดทิ้ง)
                         let phoneStr = m.phone ? String(m.phone).trim() : '-';
                         if (phoneStr.length === 9 && !phoneStr.startsWith('0') && /^\d+$/.test(phoneStr)) {
                             phoneStr = '0' + phoneStr;
@@ -1005,7 +1142,6 @@
                 return;
             }
             try {
-                // 🟢 เช็คว่ามีข้อมูลรายชื่อลูกค้าในระบบหรือยัง ถ้ายังให้ดึงมาก่อนเพื่อเอามาโชว์คู่กับรหัส
                 if (globalMembersList.length === 0) {
                     await fetchMembersForDropdown();
                 }
@@ -1019,9 +1155,7 @@
                 
                 if (data.sales && data.sales.length > 0) {
                     
-                    // 🟢 นำข้อมูลมาจัดเรียงตามวันที่ขาย (จากใหม่ไปเก่า)
                     const sortedSales = [...data.sales].sort((a, b) => {
-                        // ฟังก์ชันช่วยแปลงวันที่จากรูปแบบต่างๆ (เช่น 04/06/26 หรือ 2026-06-04) ให้เป็น Date Object
                         const parseDate = (dateStr) => {
                             if (!dateStr) return new Date(0);
                             if (dateStr.includes('T') || dateStr.includes('-')) {
@@ -1041,7 +1175,6 @@
                         const dateA = parseDate(a.saleDate);
                         const dateB = parseDate(b.saleDate);
                         
-                        // เอาวันที่ใหม่กว่าขึ้นก่อน
                         return dateB - dateA;
                     });
 
@@ -1049,14 +1182,12 @@
                         totalMoney += Number(s.total) || 0;
                         totalTires += Number(s.qty) || 0;
                         
-                        // 🟢 เรียกใช้ฟังก์ชันแปลงวันที่ตรงนี้
                         const saleDateStr = formatDateString(s.saleDate);
                         const claimDateStr = formatDateString(s.claimDate);
                         const followupStr = formatDateString(s.followup);
                         
                         const rowDataStr = encodeURIComponent(JSON.stringify(s));
                         
-                        // 🟢 ดึงชื่อลูกค้ามาโชว์คู่กับรหัส
                         const memberObj = globalMembersList.find(m => String(m.id).trim() === String(s.memberId).trim());
                         const mName = memberObj ? memberObj.name : '';
                         const displayId = mName 
@@ -1090,10 +1221,14 @@
                 document.getElementById('salesTotalTires').innerText = totalTires.toLocaleString();
                 document.getElementById('salesStockIn').innerText = (data.stockIn || 0).toLocaleString();
                 
-                // 🟢 อัปเดต UI การ์ดสต็อคปัจจุบัน (เช็คถ้าต่ำกว่า 10 ให้แจ้งเตือนสีแดง)
                 updateStockCardUI((data.stockIn || 0) - totalTires);
                 
                 currentStockInLog = data.stockInLog || [];
+                
+                const stockInModal = document.getElementById('stockInModal');
+                if (stockInModal && !stockInModal.classList.contains('hidden')) {
+                    renderStockInLog();
+                }
                 
             } catch(e) { 
                 console.error("Sales Fetch Error:", e);
@@ -1101,7 +1236,6 @@
             }
         }
 
-        // 🟢 ฟังก์ชันเปลี่ยนสีการ์ดสต็อคอัตโนมัติ ถ้ายางเหลือน้อยกว่า 10 เส้น
         function updateStockCardUI(currentStock) {
             const stockContainer = document.getElementById('stockCardContainer');
             const stockIcon = document.getElementById('stockCardIcon');
@@ -1116,17 +1250,15 @@
             stockValue.innerText = currentStock.toLocaleString();
 
             if (currentStock < 10) {
-                // แจ้งเตือนสีแดงเข้มจัดจ้าน เมื่อสต็อคต่ำ
                 stockContainer.classList.remove('border-l-amber-500', 'bg-white');
                 stockContainer.classList.add('border-l-red-600', 'bg-red-50/90');
                 stockIcon.classList.remove('bg-amber-100', 'text-amber-600');
-                stockIcon.classList.add('bg-red-600', 'text-white', 'animate-pulse', 'shadow-md', 'shadow-red-600/30'); // พื้นแดง ไอคอนขาว
+                stockIcon.classList.add('bg-red-600', 'text-white', 'animate-pulse', 'shadow-md', 'shadow-red-600/30');
                 stockLabel.classList.remove('text-slate-500');
                 stockLabel.classList.add('text-red-700', 'font-black');
                 stockValue.classList.remove('text-slate-900');
                 stockValue.classList.add('text-red-600');
             } else {
-                // กลับเป็นสีปกติเมื่อสต็อคมีเพียงพอ
                 stockContainer.classList.remove('border-l-red-600', 'bg-red-50/90');
                 stockContainer.classList.add('border-l-amber-500', 'bg-white');
                 stockIcon.classList.remove('bg-red-600', 'text-white', 'animate-pulse', 'shadow-md', 'shadow-red-600/30');
@@ -1138,7 +1270,6 @@
             }
         }
 
-        /* --- ดึงข้อมูลและสร้าง Datalist --- */
         async function fetchMembersForDropdown() {
             if(!GOOGLE_APPS_SCRIPT_URL.startsWith("https://script.google.com")) return;
             try {
@@ -1146,7 +1277,7 @@
                 const members = await res.json();
                 const dataList = document.getElementById('memberList');
                 if(Array.isArray(members)) {
-                    globalMembersList = members; // 🟢 เก็บข้อมูลไว้ใช้เทียบชื่อตอนดูรายการขาย
+                    globalMembersList = members; 
                     if(dataList) {
                         dataList.innerHTML = ''; 
                         members.forEach(m => { 
@@ -1169,7 +1300,6 @@
             document.getElementById('memberId').value = data.id; 
             document.getElementById('memberName').value = data.name;
             
-            // 🟢 จัดการเติม 0 ในหน้าต่างแก้ไขเบอร์โทรศัพท์
             let phoneStr = data.phone ? String(data.phone).trim() : '';
             if (phoneStr.length === 9 && !phoneStr.startsWith('0') && /^\d+$/.test(phoneStr)) {
                 phoneStr = '0' + phoneStr;
@@ -1178,7 +1308,6 @@
             
             document.getElementById('memberSource').value = data.source || 'ออนไลน์';
             
-            // โชว์รูปเก่าเป็นภาพตัวอย่าง (ถ้ามี)
             const previewImg = document.getElementById('previewMemberImg');
             if (data.contactPath) {
                 previewImg.src = getDirectImageUrl(data.contactPath) || data.contactPath;
@@ -1206,7 +1335,6 @@
                 return; 
             }
 
-            // 🟢 ยืนยันรหัส PIN ก่อนแก้ไขหรือเพิ่มลูกค้า
             const isAuthorized = await verifyActionPin();
             if (!isAuthorized) return;
             
@@ -1218,7 +1346,6 @@
             statusMsg.classList.add('hidden');
             
             try {
-                // แปลงรูปภาพลูกค้าเป็น Base64
                 const imageFile = document.getElementById('memberImageFile').files[0];
                 const imageBase64 = await fileToBase64(imageFile);
 
@@ -1231,7 +1358,7 @@
                     source: document.getElementById('memberSource').value,
                     imagePicBase64: imageBase64,
                     oldImage: document.getElementById('oldMemberImageUrl').value,
-                    location: "" // ถ้าไม่ได้ใช้พิกัดแล้ว ก็ส่งค่าว่างไปครับ
+                    location: "" 
                 };
                 
                 await fetch(GOOGLE_APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
@@ -1239,7 +1366,6 @@
                 statusMsg.innerHTML = 'บันทึกสำเร็จ!'; 
                 statusMsg.className = "pb-4 px-6 text-sm text-emerald-500 font-bold block";
                 
-                // รีโหลดข้อมูลลูกค้าใหม่
                 setTimeout(() => { 
                     closeAddModal(); 
                     fetchMembersData(); 
@@ -1255,7 +1381,6 @@
         async function deleteMember(row) {
             if(!confirm("ลบลูกค้าคนนี้หรือไม่?")) return;
 
-            // 🟢 ยืนยันรหัส PIN ก่อนลบลูกค้า
             const isAuthorized = await verifyActionPin();
             if (!isAuthorized) return;
 
@@ -1309,7 +1434,6 @@
             document.getElementById('saleFollowupDate').value = data.followup; document.getElementById('salePayment').value = data.payment;
             document.getElementById('saleCode1Text').value = data.code1Text; document.getElementById('saleCode2Text').value = data.code2Text;
             
-            // โชว์ภาพเก่า (ถ้ามี) ใน Modal ขาย
             const setupPreview = (url, imgId, statusId) => {
                 const img = document.getElementById(imgId);
                 const status = document.getElementById(statusId);
@@ -1338,7 +1462,6 @@
             const editRow = document.getElementById('editRowIndex').value;
             if(!memberIdOnly || !document.getElementById('saleQty').value) return;
 
-            // 🟢 ยืนยันรหัส PIN ก่อนเพิ่มหรือแก้ไขรายการขาย
             const isAuthorized = await verifyActionPin();
             if (!isAuthorized) return;
 
@@ -1370,7 +1493,6 @@
         async function deleteSale(month, row) {
             if(!confirm("ลบรายการขายนี้?")) return;
 
-            // 🟢 ยืนยันรหัส PIN ก่อนลบรายการขาย
             const isAuthorized = await verifyActionPin();
             if (!isAuthorized) return;
 
@@ -1379,13 +1501,46 @@
             setTimeout(() => fetchSalesData(month), 1500);
         }
 
+        function openEditStockIn(logStr) {
+            const data = JSON.parse(decodeURIComponent(logStr));
+            document.getElementById('editStockInRowIndex').value = data.row;
+            document.getElementById('stockInDate').value = formatDateString(data.date);
+            document.getElementById('stockInQty').value = data.qty;
+            document.getElementById('stockInNote').value = data.note || '';
+            document.getElementById('submitStockInBtn').innerHTML = '<i class="fa-solid fa-pen mr-2"></i> บันทึกการแก้ไข';
+        }
+
+        async function deleteStockIn(month, row) {
+            if(!confirm("ต้องการลบประวัติการรับยางล็อตนี้ใช่หรือไม่?")) return;
+            const isAuthorized = await verifyActionPin();
+            if (!isAuthorized) return;
+
+            document.getElementById('stockInHistoryBody').innerHTML = '<tr><td colspan="4" class="text-center py-4"><i class="fa-solid fa-circle-notch fa-spin text-rose-500 text-xl"></i></td></tr>';
+            try {
+                await fetch(GOOGLE_APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({action: "deleteStockIn", month: month, row: row}) });
+                setTimeout(() => fetchSalesData(month), 1000);
+            } catch(e) { console.error(e); }
+        }
+
         function renderStockInLog() {
             const tbody = document.getElementById('stockInHistoryBody'); tbody.innerHTML = ''; let t = 0;
-            if (currentStockInLog.length === 0) tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-slate-400">ไม่มีข้อมูล</td></tr>';
+            if (currentStockInLog.length === 0) tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-slate-400">ไม่มีข้อมูล</td></tr>';
             else {
                 [...currentStockInLog].reverse().forEach(log => {
                     t += parseInt(log.qty) || 0;
-                    tbody.innerHTML += `<tr class="hover:bg-slate-50"><td class="px-5 py-3">${log.date}</td><td class="px-5 py-3 font-bold text-slate-800">+${log.qty}</td><td class="px-5 py-3 text-xs">${log.note}</td></tr>`;
+                    const logStr = encodeURIComponent(JSON.stringify(log));
+                    const displayDate = formatDateString(log.date); 
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-5 py-3">${displayDate}</td>
+                            <td class="px-5 py-3 font-bold text-slate-800">+${log.qty}</td>
+                            <td class="px-5 py-3 text-xs">${log.note || '-'}</td>
+                            <td class="px-5 py-3 text-center">
+                                <button onclick="openEditStockIn('${logStr}')" class="text-slate-400 hover:text-brand-500 mx-1 transition-colors"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteStockIn('${currentSalesMonth}', ${log.row})" class="text-slate-400 hover:text-rose-500 mx-1 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
                 });
             }
             document.getElementById('stockInModalTotal').innerText = t.toLocaleString();
@@ -1395,28 +1550,232 @@
             const qty = document.getElementById('stockInQty').value;
             if (!qty) return; 
 
-            // 🟢 ยืนยันรหัส PIN ก่อนเพิ่มสต็อค
             const isAuthorized = await verifyActionPin();
             if (!isAuthorized) return;
 
+            const editRow = document.getElementById('editStockInRowIndex').value;
             const btn = document.getElementById('submitStockInBtn'); 
-            btn.innerHTML = 'กำลังบันทึก...'; btn.disabled = true;
-            const payload = { action: "addStockIn", month: currentSalesMonth, date: document.getElementById('stockInDate').value, qty: parseInt(qty), note: document.getElementById('stockInNote').value };
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> กำลังบันทึก...'; 
+            btn.disabled = true;
+
+            const payload = { 
+                action: editRow ? "updateStockIn" : "addStockIn", 
+                month: currentSalesMonth, 
+                row: editRow,
+                date: document.getElementById('stockInDate').value, 
+                qty: parseInt(qty), 
+                note: document.getElementById('stockInNote').value 
+            };
+
             try {
                 await fetch(GOOGLE_APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-                currentStockInLog.push({ date: payload.date, qty: payload.qty, note: payload.note });
-                renderStockInLog();
                 
-                const cur = parseInt(document.getElementById('salesStockIn').innerText.replace(/,/g, '')) || 0;
-                const newTotalStockIn = cur + payload.qty;
-                document.getElementById('salesStockIn').innerText = newTotalStockIn.toLocaleString();
+                fetchSalesData(currentSalesMonth);
                 
-                // 🟢 คำนวณสต็อคปัจจุบันใหม่ตอนที่เพิ่งเติมสต็อค และปรับสีให้เข้ากับยอดใหม่
-                const curTotalTires = parseInt(document.getElementById('salesTotalTires').innerText.replace(/,/g, '')) || 0;
-                updateStockCardUI(newTotalStockIn - curTotalTires);
+                document.getElementById('stockInQty').value = ''; 
+                document.getElementById('stockInNote').value = '';
+                document.getElementById('editStockInRowIndex').value = '';
+                btn.innerHTML = '<i class="fa-solid fa-plus mr-2"></i> บันทึกเข้าระบบ';
+                
+            } catch (e) {} finally { btn.disabled = false; }
+        }
 
-                document.getElementById('stockInQty').value = ''; document.getElementById('stockInNote').value = '';
-            } catch (e) {} finally { btn.innerHTML = '<i class="fa-solid fa-plus mr-2"></i> บันทึก'; btn.disabled = false; }
+        // 🟢 ฟังก์ชันคำนวณและดึงข้อมูล BI จากทุกเดือนมารวมกัน
+        async function fetchAndCalculateBI() {
+            if(!GOOGLE_APPS_SCRIPT_URL.startsWith("https://script.google.com")) return;
+            
+            document.getElementById('biLoadingState').classList.remove('hidden');
+            document.getElementById('biContent').classList.add('hidden');
+
+            try {
+                // ต้องมีรายชื่อลูกค้าเพื่ออ้างอิง source (ช่องทางการขาย)
+                if (globalMembersList.length === 0) await fetchMembersForDropdown();
+
+                // ยิงรีเควสไปขอข้อมูลทุกเดือนที่ระบุ (เพื่อให้ได้ภาพรวมทั้งปี)
+                const monthsToFetch = ['พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม', 'มกราคม 70'];
+                const fetchPromises = monthsToFetch.map(m => 
+                    fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=getSales&month=${m}`)
+                    .then(r => r.json())
+                    .catch(() => ({sales: []}))
+                );
+                
+                const allMonthsData = await Promise.all(fetchPromises);
+                
+                let allSales = [];
+                allMonthsData.forEach(res => {
+                    if (res && res.sales && res.sales.length > 0) {
+                        allSales = allSales.concat(res.sales);
+                    }
+                });
+
+                if(allSales.length === 0) {
+                    document.getElementById('biLoadingState').innerHTML = '<p class="text-slate-500 font-bold">ยังไม่มีข้อมูลรายการขายเพื่อนำมาวิเคราะห์</p>';
+                    return;
+                }
+
+                // เริ่มคำนวณตัวแปร
+                let totalRevenue = 0;
+                let totalOrders = allSales.length;
+                let customerPurchaseData = {}; 
+                let channelRevenue = { 'ออนไลน์': 0, 'ลงพื้นที่': 0, 'คนรู้จัก': 0 };
+
+                const parseDateStr = (dateStr) => {
+                    if(!dateStr) return new Date(0);
+                    if(dateStr.includes('T') || dateStr.includes('-')) return new Date(dateStr);
+                    const parts = dateStr.split('/');
+                    if(parts.length === 3) {
+                        let y = parseInt(parts[2], 10); if (y < 100) y += 2000;
+                        return new Date(y, parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
+                    }
+                    return new Date(0);
+                };
+
+                const today = new Date();
+
+                allSales.forEach(s => {
+                    const rev = Number(s.total) || 0;
+                    totalRevenue += rev;
+                    const mId = String(s.memberId).trim().split(' - ')[0]; 
+                    const saleDate = parseDateStr(s.saleDate);
+
+                    if(!customerPurchaseData[mId]) {
+                        customerPurchaseData[mId] = { frequency: 0, monetary: 0, lastPurchase: new Date(0) };
+                    }
+                    customerPurchaseData[mId].frequency += 1;
+                    customerPurchaseData[mId].monetary += rev;
+                    if(saleDate > customerPurchaseData[mId].lastPurchase) {
+                        customerPurchaseData[mId].lastPurchase = saleDate;
+                    }
+
+                    // หาช่องทางลูกค้า (Source)
+                    const memberInfo = globalMembersList.find(m => String(m.id).trim() === mId);
+                    if(memberInfo && memberInfo.source) {
+                        if(channelRevenue[memberInfo.source] !== undefined) {
+                            channelRevenue[memberInfo.source] += rev;
+                        }
+                    }
+                });
+
+                const uniqueCustomersCount = Object.keys(customerPurchaseData).length;
+                
+                // 1. AOV
+                const aov = totalOrders > 0 ? (totalRevenue / totalOrders) : 0;
+                // 2. CLV
+                const clvAvg = uniqueCustomersCount > 0 ? (totalRevenue / uniqueCustomersCount) : 0;
+                // 3. Retention Rate
+                let repeatCustomersCount = 0;
+                for (const mId in customerPurchaseData) {
+                    if (customerPurchaseData[mId].frequency > 1) repeatCustomersCount++;
+                }
+                const retentionRate = uniqueCustomersCount > 0 ? ((repeatCustomersCount / uniqueCustomersCount) * 100) : 0;
+
+                // ใส่ค่าขึ้นจอ
+                document.getElementById('biAov').innerText = '฿' + Math.round(aov).toLocaleString();
+                document.getElementById('biClv').innerText = '฿' + Math.round(clvAvg).toLocaleString();
+                document.getElementById('biRetention').innerText = retentionRate.toFixed(1) + '%';
+
+                // RFM & Churn Analysis
+                let rfmCounts = { 'VIP': 0, 'ขาประจำ': 0, 'เสี่ยงหาย': 0, 'หลุดลอย': 0 };
+                let churnListHtml = '';
+                let churnCount = 0;
+
+                for (const mId in customerPurchaseData) {
+                    const data = customerPurchaseData[mId];
+                    const recencyDays = Math.floor((today - data.lastPurchase) / (1000 * 60 * 60 * 24));
+                    
+                    if (recencyDays <= 45 && data.frequency >= 2 && data.monetary > aov) {
+                        rfmCounts['VIP']++;
+                    } else if (recencyDays <= 90) {
+                        rfmCounts['ขาประจำ']++;
+                    } else if (recencyDays > 90 && recencyDays <= 180) {
+                        rfmCounts['เสี่ยงหาย']++;
+                        churnCount++;
+                        const memberInfo = globalMembersList.find(m => String(m.id).trim() === mId);
+                        const mName = memberInfo ? memberInfo.name : 'ไม่ทราบชื่อ';
+                        const mPhone = memberInfo ? memberInfo.phone : '-';
+                        
+                        churnListHtml += `
+                            <div class="flex justify-between items-center bg-white p-3 rounded-xl mb-2 border border-rose-50 shadow-sm">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">${mId} ${mName}</p>
+                                    <p class="text-[10px] text-slate-500">ซื้อล่าสุดเมื่อ ${recencyDays} วันที่แล้ว</p>
+                                </div>
+                                <a href="tel:${mPhone}" class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors shadow-sm">
+                                    <i class="fa-solid fa-phone text-xs"></i>
+                                </a>
+                            </div>
+                        `;
+                    } else {
+                        rfmCounts['หลุดลอย']++;
+                    }
+                }
+
+                document.getElementById('biChurnCountBadge').innerText = `${churnCount} ราย`;
+                if(churnCount > 0) {
+                    document.getElementById('biChurnList').innerHTML = churnListHtml;
+                } else {
+                    document.getElementById('biChurnList').innerHTML = `<p class="text-center text-xs text-slate-400 py-4 font-bold">🎉 ไม่มีลูกค้าในกลุ่มเสี่ยง (ยอดเยี่ยม!)</p>`;
+                }
+
+                // SWOT Insights Data Driven
+                let swotS = ""; let swotW = "";
+                if (retentionRate > 30) swotS = `อัตราการซื้อซ้ำสูงถึง ${retentionRate.toFixed(1)}% แสดงว่าคุณภาพสินค้าและการบริการรักษาลูกค้าเก่าได้ดีมาก`;
+                else if (rfmCounts['VIP'] > (uniqueCustomersCount * 0.1)) swotS = `มีกลุ่มลูกค้า VIP เหนียวแน่น ครองสัดส่วนช่วยพยุงรายได้หลักของร้านในสภาวะตลาดชะลอตัว`;
+                else swotS = `ลูกค้าส่วนใหญ่มียอดบิลต่อครั้งสูงกว่าค่าเฉลี่ยปกติ (AOV = ฿${Math.round(aov).toLocaleString()})`;
+
+                let channels = Object.keys(channelRevenue);
+                let topChannel = channels.reduce((a, b) => channelRevenue[a] > channelRevenue[b] ? a : b);
+                let weakChannel = channels.reduce((a, b) => channelRevenue[a] < channelRevenue[b] ? a : b);
+                
+                if (churnCount > (uniqueCustomersCount * 0.2)) swotW = `มีลูกค้ากว่า ${churnCount} รายขาดการติดต่อนานเกิน 90 วัน ควรให้ทีมขายรีบโทรตามเพื่ออัปเดตโปรโมชัน`;
+                else if (retentionRate < 10) swotW = `ลูกค้าซื้อครั้งเดียวแล้วหายไปเยอะมาก ควรเพิ่มระบบสะสมแต้ม หรือของแถมในการซื้อครั้งถัดไป`;
+                else if (channelRevenue[weakChannel] < (totalRevenue * 0.1)) swotW = `ช่องทาง "${weakChannel}" ทำรายได้น้อยมากเมื่อเทียบกับ "${topChannel}" อาจต้องปรับแผนการหาลูกค้าใหม่`;
+                else swotW = `ปัจจุบันข้อมูลภาพรวมยังอยู่ในเกณฑ์ที่สม่ำเสมอ ควรรักษามาตรฐานการโทรดูแลลูกค้า (Follow-up) เอาไว้`;
+
+                document.getElementById('biSwotS').innerText = swotS;
+                document.getElementById('biSwotW').innerText = swotW;
+
+                // วาดกราฟ Doughnut (RFM)
+                if (biRfmChartObj) biRfmChartObj.destroy();
+                biRfmChartObj = new Chart(document.getElementById('biRfmChart'), {
+                    type: 'doughnut',
+                    data: { 
+                        labels: ['VIP', 'ขาประจำ', 'เสี่ยงหาย', 'หลุดลอย'], 
+                        datasets: [{ 
+                            data: [rfmCounts['VIP'], rfmCounts['ขาประจำ'], rfmCounts['เสี่ยงหาย'], rfmCounts['หลุดลอย']], 
+                            backgroundColor: ['#facc15', '#94a3b8', '#f43f5e', '#1e293b'], 
+                            borderWidth: 0, hoverOffset: 4 
+                        }] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: {font: {family: "'Sarabun', sans-serif", weight: 'bold'}, boxWidth: 15, padding: 15}} } }
+                });
+
+                // วาดกราฟ Bar (Channels)
+                if (biChannelChartObj) biChannelChartObj.destroy();
+                biChannelChartObj = new Chart(document.getElementById('biChannelChart'), {
+                    type: 'bar',
+                    data: { 
+                        labels: ['ออนไลน์', 'ลงพื้นที่', 'คนรู้จัก'], 
+                        datasets: [{ 
+                            data: [channelRevenue['ออนไลน์'], channelRevenue['ลงพื้นที่'], channelRevenue['คนรู้จัก']], 
+                            backgroundColor: ['#facc15', '#1e293b', '#f8fafc'], // เหลือง, ดำ, เทาอ่อน
+                            borderColor: ['#facc15', '#1e293b', '#cbd5e1'],
+                            borderWidth: 1,
+                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 } 
+                        }] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { borderDash: [4, 4] } } } }
+                });
+
+                // ปิดกล่อง Loading เผยกล่องคอนเทนต์
+                document.getElementById('biLoadingState').classList.add('hidden');
+                document.getElementById('biContent').classList.remove('hidden');
+                isBiDataLoaded = true;
+
+            } catch (error) {
+                console.error("BI Calculation Error:", error);
+                document.getElementById('biLoadingState').innerHTML = `<p class="text-rose-500 font-bold">เกิดข้อผิดพลาดในการประมวลผลข้อมูล</p><p class="text-xs text-slate-500 mt-2">${error.message}</p>`;
+            }
         }
     </script>
 </body>
