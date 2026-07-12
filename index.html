@@ -123,14 +123,13 @@
                     <i class="fa-solid fa-chart-pie text-lg group-hover:scale-110 transition-transform w-6 text-center"></i>
                     <span class="ml-3">ภาพรวม (Overview)</span>
                 </a>
-                <a href="#" onclick="event.preventDefault(); switchView('bi')" id="nav-bi" class="nav-item flex items-center px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white font-semibold transition-all group relative">
-                    <i class="fa-regular fa-lightbulb text-lg group-hover:scale-110 transition-transform w-6 text-center"></i>
-                    <span class="ml-3 flex-1">วิเคราะห์ธุรกิจ (BI)</span>
-                    <span class="bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full absolute right-4">NEW</span>
-                </a>
                 <a href="#" onclick="event.preventDefault(); switchView('crm')" id="nav-crm-db" class="nav-item flex items-center px-4 py-3 rounded-xl bg-brand-400 text-slate-900 font-bold shadow-md group transition-all">
                     <i class="fa-solid fa-users text-lg group-hover:scale-110 transition-transform w-6 text-center"></i>
                     <span class="ml-3">จัดการฐานลูกค้า</span>
+                </a>
+                <a href="#" onclick="event.preventDefault(); switchView('bi')" id="nav-bi" class="nav-item flex items-center px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white font-semibold transition-all group">
+                    <i class="fa-solid fa-magnifying-glass-chart text-lg group-hover:scale-110 transition-transform w-6 text-center"></i>
+                    <span class="ml-3">วิเคราะห์ธุรกิจ (BI)</span>
                 </a>
                 
                 <!-- Year 69 -->
@@ -189,7 +188,7 @@
                 </div>
             </header>
 
-            <div class="flex-1 overflow-y-auto px-4 pb-8 sm:px-8 relative pt-6">
+            <div class="flex-1 overflow-y-auto px-4 pb-8 sm:px-8 relative">
                 
                 <!-- ================= OVERVIEW VIEW ================= -->
                 <div id="overviewView" class="hidden transition-opacity duration-500">
@@ -232,95 +231,6 @@
                         <div class="glass-card rounded-3xl p-8 flex flex-col animate-fade-in-up" style="animation-delay: 0.6s;">
                             <h2 class="text-lg font-extrabold text-slate-900 mb-6 flex items-center"><i class="fa-solid fa-chart-area text-slate-700 mr-3"></i> เปรียบเทียบ ยางเข้า vs ยางขาย</h2>
                             <div class="relative h-72 w-full"><canvas id="stockChart"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ================= BI VIEW ================= -->
-                <div id="biView" class="hidden transition-opacity duration-500">
-                    <!-- Loading State -->
-                    <div id="biLoadingState" class="hidden flex flex-col items-center justify-center py-20">
-                        <i class="fa-solid fa-circle-notch fa-spin text-brand-400 text-5xl mb-4"></i>
-                        <p class="text-slate-500 font-bold text-lg animate-pulse">กำลังประมวลผลข้อมูล AI Business Intelligence...</p>
-                        <p class="text-xs text-slate-400 mt-2">อาจใช้เวลาสักครู่ในการรวบรวมข้อมูลทั้งหมด</p>
-                    </div>
-
-                    <!-- Content State -->
-                    <div id="biContent" class="block">
-                        <!-- KPI Row -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                            <div class="glass-card rounded-3xl p-6 relative overflow-hidden animate-fade-in-up">
-                                <div class="absolute top-4 right-4 bg-emerald-100 text-emerald-700 text-[10px] font-black px-3 py-1.5 rounded-lg tracking-wider">ประสิทธิภาพ</div>
-                                <p class="text-xs font-extrabold text-slate-500 mb-2 uppercase tracking-wide">ยอดซื้อเฉลี่ยต่อบิล (AOV)</p>
-                                <h3 class="text-3xl xl:text-4xl font-black text-slate-900 mt-1" id="biAov">฿0</h3>
-                            </div>
-                            <div class="glass-card rounded-3xl p-6 relative overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s;">
-                                <div class="absolute top-4 right-4 bg-blue-100 text-blue-700 text-[10px] font-black px-3 py-1.5 rounded-lg tracking-wider">ความคุ้มค่า</div>
-                                <p class="text-xs font-extrabold text-slate-500 mb-2 uppercase tracking-wide">ยอดซื้อสะสมต่อลูกค้า (CLV Avg.)</p>
-                                <h3 class="text-3xl xl:text-4xl font-black text-slate-900 mt-1" id="biClv">฿0</h3>
-                            </div>
-                            <div class="glass-card rounded-3xl p-6 relative overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s;">
-                                <div class="absolute top-4 right-4 bg-purple-100 text-purple-700 text-[10px] font-black px-3 py-1.5 rounded-lg tracking-wider">ความผูกพัน</div>
-                                <p class="text-xs font-extrabold text-slate-500 mb-2 uppercase tracking-wide">อัตราการกลับมาซื้อซ้ำ (Retention)</p>
-                                <h3 class="text-3xl xl:text-4xl font-black text-slate-900 mt-1" id="biRetention">0%</h3>
-                            </div>
-                        </div>
-
-                        <!-- Charts Row -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                            <div class="glass-card rounded-3xl p-6 animate-fade-in-up" style="animation-delay: 0.3s;">
-                                <div class="flex justify-between items-start mb-2">
-                                    <div>
-                                        <h3 class="font-extrabold text-slate-900 text-lg">การจัดกลุ่มลูกค้า (RFM)</h3>
-                                        <p class="text-xs text-slate-500">แบ่งตาม พฤติกรรมการซื้อล่าสุด / ความถี่ / ยอดเงิน</p>
-                                    </div>
-                                    <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center"><i class="fa-solid fa-circle-info text-sm"></i></div>
-                                </div>
-                                <div class="relative h-64 w-full flex justify-center mt-4"><canvas id="biRfmChart"></canvas></div>
-                            </div>
-                            <div class="glass-card rounded-3xl p-6 animate-fade-in-up" style="animation-delay: 0.4s;">
-                                <div class="mb-2">
-                                    <h3 class="font-extrabold text-slate-900 text-lg">รายได้แยกตามช่องทางหาลูกค้า</h3>
-                                    <p class="text-xs text-slate-500">ช่วยตัดสินใจว่าควรลงทุนเวลา/เงินไปกับช่องทางไหน</p>
-                                </div>
-                                <div class="relative h-64 w-full mt-4"><canvas id="biChannelChart"></canvas></div>
-                            </div>
-                        </div>
-
-                        <!-- Insights Row -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                            <div class="bg-rose-50/50 border border-rose-100 rounded-3xl p-6 shadow-sm animate-fade-in-up" style="animation-delay: 0.5s;">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h3 class="font-extrabold text-rose-800 text-lg flex items-center"><i class="fa-solid fa-triangle-exclamation mr-2"></i> ลูกค้าเสี่ยงหาย (เกิน 90 วัน)</h3>
-                                    <span class="bg-rose-200 text-rose-800 text-[10px] font-black px-3 py-1.5 rounded-full tracking-widest" id="biChurnCountBadge">0 ราย</span>
-                                </div>
-                                <p class="text-xs font-semibold text-rose-600/70 mb-6">กลุ่มที่เคยซื้อ แต่นิ่งช่วงที่ผ่านมา ลูกค้าควรโทรทักทายเสนอโปร</p>
-                                <div id="biChurnList" class="space-y-2 max-h-48 overflow-y-auto no-scrollbar pr-1">
-                                    <!-- Injected by JS -->
-                                </div>
-                            </div>
-                            
-                            <div class="bg-amber-50/50 border border-amber-100 rounded-3xl p-6 shadow-sm animate-fade-in-up" style="animation-delay: 0.6s;">
-                                <h3 class="font-extrabold text-amber-900 text-lg mb-1 flex items-center"><i class="fa-solid fa-chess-knight mr-2"></i> Data-driven SWOT Insights</h3>
-                                <p class="text-xs font-semibold text-amber-700/70 mb-8">สรุปจุดแข็ง-จุดอ่อนอัตโนมัติจากตัวเลขจริงในระบบ</p>
-                                
-                                <div class="space-y-6">
-                                    <div class="flex items-start">
-                                        <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 font-bold flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">S</div>
-                                        <div>
-                                            <h4 class="font-bold text-slate-800 text-sm">จุดแข็ง (Strength)</h4>
-                                            <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed" id="biSwotS">...</p>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start">
-                                        <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 font-bold flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">W</div>
-                                        <div>
-                                            <h4 class="font-bold text-slate-800 text-sm">จุดอ่อน (Weakness)</h4>
-                                            <p class="text-xs text-slate-600 mt-1 font-medium leading-relaxed" id="biSwotW">...</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -436,6 +346,159 @@
                         </div>
                     </div>
                 </div> <!-- End Sales View -->
+
+                <!-- ================= BUSINESS INTELLIGENCE VIEW ================= -->
+                <div id="biView" class="hidden">
+
+                    <div id="biLoadingState" class="glass-card rounded-3xl p-12 text-center mb-8">
+                        <i class="fa-solid fa-circle-notch fa-spin text-brand-400 text-4xl mb-4"></i>
+                        <p class="text-slate-500 font-semibold">กำลังประมวลผลข้อมูลจากทุกเดือน...</p>
+                        <p class="text-slate-400 text-xs mt-1">รวมข้อมูลลูกค้าและยอดขายทุกเดือนเพื่อวิเคราะห์</p>
+                    </div>
+
+                    <div id="biContent" class="hidden">
+
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="text-xs text-slate-400 max-w-md">คำนวณจากข้อมูลจริงในระบบทั้งหมด ไม่ใช่ตัวเลขสมมติ</p>
+                            <button onclick="loadBIData(true)" class="flex items-center px-4 py-2 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm flex-shrink-0">
+                                <i class="fa-solid fa-rotate mr-2"></i> รีเฟรชข้อมูลวิเคราะห์
+                            </button>
+                        </div>
+
+                        <!-- KPI Cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                            <div class="glass-card rounded-3xl p-5 border-l-4 border-l-emerald-500 animate-fade-in-up">
+                                <p class="text-xs font-extrabold text-slate-500 mb-1 uppercase tracking-wider">อัตรากลับมาซื้อซ้ำ</p>
+                                <div class="flex justify-between items-center gap-2">
+                                    <h3 class="text-2xl xl:text-3xl font-black text-slate-900" id="biRepeatRate">-</h3>
+                                    <div class="w-10 h-10 flex-shrink-0 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 text-lg"><i class="fa-solid fa-rotate"></i></div>
+                                </div>
+                            </div>
+                            <div class="glass-card rounded-3xl p-5 border-l-4 border-l-rose-500 animate-fade-in-up" style="animation-delay: 0.1s;">
+                                <p class="text-xs font-extrabold text-slate-500 mb-1 uppercase tracking-wider">เสี่ยงหาย/หายไปแล้ว</p>
+                                <div class="flex justify-between items-center gap-2">
+                                    <h3 class="text-2xl xl:text-3xl font-black text-slate-900" id="biAtRiskCount">-</h3>
+                                    <div class="w-10 h-10 flex-shrink-0 rounded-xl bg-rose-100 flex items-center justify-center text-rose-600 text-lg"><i class="fa-solid fa-user-clock"></i></div>
+                                </div>
+                            </div>
+                            <div class="glass-card rounded-3xl p-5 border-l-4 border-l-brand-400 animate-fade-in-up" style="animation-delay: 0.2s;">
+                                <p class="text-xs font-extrabold text-slate-500 mb-1 uppercase tracking-wider">เติบโตเดือนล่าสุด</p>
+                                <div class="flex justify-between items-center gap-2">
+                                    <h3 class="text-2xl xl:text-3xl font-black text-slate-900" id="biGrowthRate">-</h3>
+                                    <div class="w-10 h-10 flex-shrink-0 rounded-xl bg-brand-100 flex items-center justify-center text-brand-600 text-lg"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                                </div>
+                            </div>
+                            <div class="glass-card rounded-3xl p-5 border-l-4 border-l-slate-800 animate-fade-in-up" style="animation-delay: 0.3s;">
+                                <p class="text-xs font-extrabold text-slate-500 mb-1 uppercase tracking-wider">มูลค่าเฉลี่ย/บิล</p>
+                                <div class="flex justify-between items-center gap-2">
+                                    <h3 class="text-2xl xl:text-3xl font-black text-slate-900" id="biAOV">-</h3>
+                                    <div class="w-10 h-10 flex-shrink-0 rounded-xl bg-slate-200 flex items-center justify-center text-slate-700 text-lg"><i class="fa-solid fa-receipt"></i></div>
+                                </div>
+                            </div>
+                            <div class="glass-card rounded-3xl p-5 border-l-4 border-l-amber-500 animate-fade-in-up" style="animation-delay: 0.4s;">
+                                <p class="text-xs font-extrabold text-slate-500 mb-1 uppercase tracking-wider">นัดติดตามเลยกำหนด</p>
+                                <div class="flex justify-between items-center gap-2">
+                                    <h3 class="text-2xl xl:text-3xl font-black text-slate-900" id="biOverdueFollowup">-</h3>
+                                    <div class="w-10 h-10 flex-shrink-0 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 text-lg"><i class="fa-solid fa-phone-volume"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RFM Segmentation -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                            <div class="lg:col-span-1 glass-card rounded-3xl p-8 flex flex-col animate-fade-in-up">
+                                <h2 class="text-lg font-extrabold text-slate-900 mb-1 flex items-center"><i class="fa-solid fa-users-viewfinder text-brand-500 mr-3"></i>กลุ่มลูกค้า (RFM)</h2>
+                                <p class="text-xs text-slate-400 mb-6">แบ่งจากวันที่ซื้อล่าสุด ความถี่ และยอดใช้จ่ายสะสม</p>
+                                <div class="relative h-56 w-full flex justify-center"><canvas id="rfmChart"></canvas></div>
+                            </div>
+                            <div class="lg:col-span-2 glass-card rounded-3xl p-8 overflow-hidden flex flex-col animate-fade-in-up" style="animation-delay: 0.1s;">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h2 class="text-lg font-extrabold text-slate-900">ลูกค้าที่ควรติดต่อด่วน</h2>
+                                    <span class="text-xs text-rose-600 bg-rose-100 px-4 py-1.5 rounded-full font-black">เสี่ยงหาย / หายไปแล้ว</span>
+                                </div>
+                                <p class="text-xs text-slate-400 mb-4">ไม่มีการซื้อซ้ำเกิน 90 วัน เรียงจากนานสุดไปหาล่าสุด</p>
+                                <div class="overflow-x-auto flex-1 no-scrollbar max-h-72">
+                                    <table class="w-full text-left border-collapse whitespace-nowrap" id="rfmAtRiskTable">
+                                        <thead>
+                                            <tr class="text-[11px] font-bold text-slate-400 border-b-2 border-slate-200/50 uppercase tracking-widest sticky top-0 bg-white/95">
+                                                <th class="px-4 py-3">ลูกค้า</th>
+                                                <th class="px-4 py-3">ซื้อล่าสุด</th>
+                                                <th class="px-4 py-3 text-center">จำนวนครั้ง</th>
+                                                <th class="px-4 py-3">ยอดสะสม (฿)</th>
+                                                <th class="px-4 py-3 text-center">ติดต่อ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-sm divide-y divide-slate-200/50 font-medium text-slate-700" id="rfmAtRiskBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Growth & AOV -->
+                        <div class="glass-card rounded-3xl p-8 flex flex-col mb-8 animate-fade-in-up">
+                            <h2 class="text-lg font-extrabold text-slate-900 mb-1 flex items-center"><i class="fa-solid fa-chart-line text-brand-500 mr-3"></i>แนวโน้มยอดขายและมูลค่าเฉลี่ยต่อบิล</h2>
+                            <p class="text-xs text-slate-400 mb-6">แท่ง = ยอดขายรายเดือน (บาท) &nbsp;|&nbsp; เส้น = มูลค่าเฉลี่ยต่อบิล (AOV)</p>
+                            <div class="relative h-72 w-full"><canvas id="growthAovChart"></canvas></div>
+                        </div>
+
+                        <!-- Channel ROI + Follow-up Pipeline -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <div class="glass-card rounded-3xl p-8 flex flex-col animate-fade-in-up">
+                                <h2 class="text-lg font-extrabold text-slate-900 mb-1 flex items-center"><i class="fa-solid fa-bullseye text-brand-500 mr-3"></i>ประสิทธิภาพช่องทางลูกค้า</h2>
+                                <p class="text-xs text-slate-400 mb-6">เทียบรายได้และอัตรากลับมาซื้อซ้ำของแต่ละช่องทาง</p>
+                                <div class="relative h-64 w-full"><canvas id="channelChart"></canvas></div>
+                            </div>
+                            <div class="glass-card rounded-3xl p-8 flex flex-col animate-fade-in-up" style="animation-delay: 0.1s;">
+                                <h2 class="text-lg font-extrabold text-slate-900 mb-1 flex items-center"><i class="fa-solid fa-phone-volume text-brand-500 mr-3"></i>คิวติดตามลูกค้า</h2>
+                                <p class="text-xs text-slate-400 mb-4">เรียงตามความเร่งด่วน สีแดง = เลยกำหนดแล้ว</p>
+                                <div class="overflow-y-auto no-scrollbar max-h-64 space-y-2" id="followupList"></div>
+                            </div>
+                        </div>
+
+                        <!-- Warranty Health -->
+                        <div class="glass-card rounded-3xl p-8 flex flex-col mb-8 animate-fade-in-up">
+                            <div class="flex justify-between items-center mb-1">
+                                <h2 class="text-lg font-extrabold text-slate-900 flex items-center"><i class="fa-solid fa-shield-heart text-brand-500 mr-3"></i>สุขภาพการรับประกัน</h2>
+                                <span class="text-xs text-slate-900 bg-brand-400 px-4 py-1.5 rounded-full font-black" id="biWarrantyBadge">0 เคสใกล้ครบ</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mb-4">รายการที่ใกล้ครบกำหนดเครมภายใน 30 วัน</p>
+                            <div class="overflow-x-auto no-scrollbar">
+                                <table class="w-full text-left border-collapse whitespace-nowrap" id="warrantyTable">
+                                    <thead>
+                                        <tr class="text-[11px] font-bold text-slate-400 border-b-2 border-slate-200/50 uppercase tracking-widest">
+                                            <th class="px-4 py-3">ลูกค้า</th>
+                                            <th class="px-4 py-3">วันที่ขาย</th>
+                                            <th class="px-4 py-3">ครบเครม</th>
+                                            <th class="px-4 py-3 text-center">เหลือ (วัน)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-sm divide-y divide-slate-200/50 font-medium text-slate-700" id="warrantyBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- SWOT Insight Cards -->
+                        <div class="mb-8">
+                            <h2 class="text-lg font-extrabold text-slate-900 mb-1 flex items-center"><i class="fa-solid fa-compass text-brand-500 mr-3"></i>สรุปจุดแข็ง-จุดอ่อน (SWOT จากข้อมูลจริง)</h2>
+                            <p class="text-xs text-slate-400 mb-4">สรุปอัตโนมัติจากตัวเลขในระบบ ไม่ใช่ค่ามาตรฐานอุตสาหกรรม ใช้เทียบกับเป้าหมายของร้านเอง</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="swotCardsContainer"></div>
+                        </div>
+
+                        <!-- Manual Market Intelligence Input (B3) -->
+                        <div class="glass-card rounded-3xl p-8 flex flex-col mb-8 animate-fade-in-up">
+                            <h2 class="text-lg font-extrabold text-slate-900 mb-1 flex items-center"><i class="fa-solid fa-magnifying-glass-dollar text-brand-500 mr-3"></i>บันทึกข้อมูลตลาด/คู่แข่ง</h2>
+                            <p class="text-xs text-slate-400 mb-6">กรอกเก็บไว้เทียบกับข้อมูลภายในร้าน (บันทึกในเครื่องนี้เท่านั้น ยังไม่เชื่อมฐานข้อมูลกลาง)</p>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+                                <input type="text" id="marketNoteCompetitor" placeholder="ชื่อคู่แข่ง/ร้าน" class="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-400 outline-none text-sm">
+                                <input type="text" id="marketNotePrice" placeholder="ราคา/โปรโมชัน" class="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-400 outline-none text-sm">
+                                <input type="text" id="marketNoteReason" placeholder="เหตุผลที่ลูกค้าเลือก/ไม่เลือกร้าน" class="px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-brand-400 outline-none text-sm md:col-span-2">
+                            </div>
+                            <button onclick="addMarketNote()" class="self-start px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-brand-400 rounded-xl font-bold text-sm shadow-md transition-all mb-6"><i class="fa-solid fa-plus mr-2"></i>บันทึก</button>
+                            <div id="marketNotesList" class="space-y-2"></div>
+                        </div>
+
+                    </div>
+                </div> <!-- End BI View -->
 
             </div>
         </main>
@@ -660,10 +723,13 @@
         let stockChartObj = null;
         let actionPinResolve = null; // ตัวแปรสำหรับรอดักการตอบกลับของ Action PIN
 
-        // 🟢 เพิ่มตัวแปรสำหรับกราฟ BI
-        let biRfmChartObj = null;
-        let biChannelChartObj = null;
-        let isBiDataLoaded = false;
+        // 🟢 ตัวแปรสำหรับโมดูล Business Intelligence (BI)
+        let biDataLoaded = false;
+        let biAllSales = [];
+        let biMonthsOrder = [];
+        let rfmChartObj = null;
+        let growthAovChartObj = null;
+        let channelChartObj = null;
 
         Chart.defaults.font.family = "'Sarabun', 'Inter', sans-serif";
         Chart.defaults.color = '#64748b'; // Text color for charts
@@ -796,18 +862,15 @@
             
             // รีเซ็ตคลาสของเมนูทั้งหมด
             document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('bg-brand-400', 'text-slate-900', 'shadow-md', 'font-bold', 'text-white');
+                el.classList.remove('bg-brand-400', 'text-slate-900', 'shadow-md', 'font-bold');
                 el.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-white', 'font-semibold');
-            });
-
-            // ซ่อนทุกหน้าต่างก่อน
-            ['overviewView', 'biView', 'crmView', 'salesView'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
             });
 
             if (viewName === 'overview') {
                 document.getElementById('overviewView').classList.remove('hidden');
+                document.getElementById('crmView').classList.add('hidden');
+                document.getElementById('salesView').classList.add('hidden');
+                document.getElementById('biView').classList.add('hidden');
                 document.getElementById('headerTitle').innerText = 'ภาพรวม (Overview)';
                 document.getElementById('headerSubtitle').innerText = 'สรุปสถิติประจำปีและกราฟวิเคราะห์';
                 document.getElementById('mainAddBtn').classList.add('hidden');
@@ -820,24 +883,11 @@
                 
                 fetchOverviewData();
 
-            } else if (viewName === 'bi') {
-                // 🟢 กรณีเปิดหน้า BI
-                document.getElementById('biView').classList.remove('hidden');
-                document.getElementById('headerTitle').innerText = 'วิเคราะห์ธุรกิจ (Business Intelligence)';
-                document.getElementById('headerSubtitle').innerText = 'ผู้ช่วยวางแผนกลยุทธ์เติบโต (Growth Strategist)';
-                document.getElementById('mainAddBtn').classList.add('hidden');
-                
-                const activeNav = document.getElementById('nav-bi');
-                if(activeNav) { 
-                    activeNav.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-white', 'font-semibold'); 
-                    activeNav.classList.add('bg-brand-400', 'text-slate-900', 'shadow-md', 'font-bold'); 
-                }
-                
-                // เรียกฟังก์ชันประมวลผลข้อมูลถ้ายังไม่เคยโหลด
-                if (!isBiDataLoaded) fetchAndCalculateBI();
-
             } else if (viewName === 'crm') {
+                document.getElementById('overviewView').classList.add('hidden');
                 document.getElementById('crmView').classList.remove('hidden');
+                document.getElementById('salesView').classList.add('hidden');
+                document.getElementById('biView').classList.add('hidden');
                 document.getElementById('headerTitle').innerText = 'จัดการฐานข้อมูลลูกค้า';
                 document.getElementById('headerSubtitle').innerText = 'ระบบสมาชิก โกดังยางรถบรรทุก สระบุรี';
                 document.getElementById('mainAddBtn').classList.remove('hidden');
@@ -852,7 +902,10 @@
                 fetchMembersData();
 
             } else if (viewName === 'sales') {
+                document.getElementById('overviewView').classList.add('hidden');
+                document.getElementById('crmView').classList.add('hidden');
                 document.getElementById('salesView').classList.remove('hidden');
+                document.getElementById('biView').classList.add('hidden');
                 document.getElementById('headerTitle').innerText = `รายการขาย (${month})`;
                 document.getElementById('headerSubtitle').innerText = `แดชบอร์ดสรุปยอดขายประจำเดือน${month}`;
                 document.getElementById('mainAddBtn').classList.remove('hidden');
@@ -866,6 +919,23 @@
                 }
 
                 fetchSalesData(month);
+
+            } else if (viewName === 'bi') {
+                document.getElementById('overviewView').classList.add('hidden');
+                document.getElementById('crmView').classList.add('hidden');
+                document.getElementById('salesView').classList.add('hidden');
+                document.getElementById('biView').classList.remove('hidden');
+                document.getElementById('headerTitle').innerText = 'วิเคราะห์ธุรกิจ (Business Intelligence)';
+                document.getElementById('headerSubtitle').innerText = 'จุดแข็ง-จุดอ่อน พฤติกรรมลูกค้า และสถิติกระตุ้นยอดขาย';
+                document.getElementById('mainAddBtn').classList.add('hidden');
+
+                const activeNav = document.getElementById('nav-bi');
+                if(activeNav) {
+                    activeNav.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-white', 'font-semibold');
+                    activeNav.classList.add('bg-brand-400', 'text-slate-900', 'shadow-md', 'font-bold');
+                }
+
+                loadBIData();
             }
         }
 
@@ -970,20 +1040,26 @@
             if (!url) return null;
             let fileId = null;
             
+            // รูปแบบที่ 1: https://drive.google.com/file/d/FILE_ID/view
             const driveMatch = url.match(/\/d\/(.+?)\//);
             if (driveMatch && driveMatch[1]) fileId = driveMatch[1];
             
+            // รูปแบบที่ 2: https://drive.google.com/open?id=FILE_ID
             const openMatch = url.match(/id=(.+?)(&|$)/);
             if (openMatch && openMatch[1]) fileId = openMatch[1];
             
             if (fileId) {
+                // ใช้เซิร์ฟเวอร์ lh3 ของ Google ช่วยเลี่ยงการถูกบล็อก
                 return `https://lh3.googleusercontent.com/d/${fileId}`;
             }
+            
+            // ถ้ารูปแบบเป็นเว็บปกติ (http) ให้ส่งคืนค่าเดิม
             if (url.startsWith('http')) return url;
+            
             return null;
         }
 
-        // 🟢 ฟังก์ชันช่วยเหลือสำหรับแปลงรูปแบบวันที่
+        // 🟢 ฟังก์ชันช่วยเหลือสำหรับแปลงรูปแบบวันที่จากยาวๆ ให้สั้นลง (เช่น 2026-06-04T... -> 04/06/2026)
         function formatDateString(dateStr) {
             if (!dateStr || dateStr === '-') return '-';
             try {
@@ -1016,16 +1092,19 @@
 
                 if (d.labels && d.labels.length > 0) {
                     
+                    // 🟢 โค้ดสำหรับจัดเรียงเดือนจากซ้ายไปขวา (มกราคม -> ธันวาคม)
                     const thaiMonths = {
                         "มกราคม": 1, "กุมภาพันธ์": 2, "มีนาคม": 3, "เมษายน": 4,
                         "พฤษภาคม": 5, "มิถุนายน": 6, "กรกฎาคม": 7, "สิงหาคม": 8,
                         "กันยายน": 9, "ตุลาคม": 10, "พฤศจิกายน": 11, "ธันวาคม": 12
                     };
                     
+                    // มัดรวมข้อมูลเพื่อนำมาจัดเรียง
                     let combinedData = [];
                     for (let i = 0; i < d.labels.length; i++) {
                         let labelName = d.labels[i];
-                        let monthOrder = 99; 
+                        // หาลำดับเดือน ถ้ามีชื่อเดือนอยู่ใน label
+                        let monthOrder = 99; // ค่าเริ่มต้นถ้าไม่ใช่ชื่อเดือน
                         for (const [mName, mIndex] of Object.entries(thaiMonths)) {
                             if (labelName.includes(mName)) { monthOrder = mIndex; break; }
                         }
@@ -1039,13 +1118,16 @@
                         });
                     }
                     
+                    // สั่งเรียงลำดับจากเดือน 1 ถึง 12
                     combinedData.sort((a, b) => a.order - b.order);
                     
+                    // แตกข้อมูลที่เรียงแล้วกลับเข้า Array เพื่อวาดกราฟ
                     const sortedLabels = combinedData.map(item => item.label);
                     const sortedRevenue = combinedData.map(item => item.revenue);
                     const sortedStockIn = combinedData.map(item => item.stockIn);
                     const sortedSold = combinedData.map(item => item.sold);
 
+                    // อัปเดตกราฟด้วยข้อมูลที่จัดเรียงแล้ว
                     if (revChartObj) revChartObj.destroy();
                     revChartObj = new Chart(document.getElementById('revenueChart'), { 
                         type: 'bar', 
@@ -1221,6 +1303,7 @@
                 document.getElementById('salesTotalTires').innerText = totalTires.toLocaleString();
                 document.getElementById('salesStockIn').innerText = (data.stockIn || 0).toLocaleString();
                 
+                // 🟢 อัปเดต UI การ์ดสต็อคปัจจุบัน (เช็คถ้าต่ำกว่า 10 ให้แจ้งเตือนสีแดงเข้ม)
                 updateStockCardUI((data.stockIn || 0) - totalTires);
                 
                 currentStockInLog = data.stockInLog || [];
@@ -1236,6 +1319,7 @@
             }
         }
 
+        // 🟢 ฟังก์ชันเปลี่ยนสีการ์ดสต็อคอัตโนมัติ ถ้ายางเหลือน้อยกว่า 10 เส้น
         function updateStockCardUI(currentStock) {
             const stockContainer = document.getElementById('stockCardContainer');
             const stockIcon = document.getElementById('stockCardIcon');
@@ -1250,15 +1334,17 @@
             stockValue.innerText = currentStock.toLocaleString();
 
             if (currentStock < 10) {
+                // แจ้งเตือนสีแดงเข้มจัดจ้าน เมื่อสต็อคต่ำ
                 stockContainer.classList.remove('border-l-amber-500', 'bg-white');
                 stockContainer.classList.add('border-l-red-600', 'bg-red-50/90');
                 stockIcon.classList.remove('bg-amber-100', 'text-amber-600');
-                stockIcon.classList.add('bg-red-600', 'text-white', 'animate-pulse', 'shadow-md', 'shadow-red-600/30');
+                stockIcon.classList.add('bg-red-600', 'text-white', 'animate-pulse', 'shadow-md', 'shadow-red-600/30'); // พื้นแดง ไอคอนขาว
                 stockLabel.classList.remove('text-slate-500');
                 stockLabel.classList.add('text-red-700', 'font-black');
                 stockValue.classList.remove('text-slate-900');
                 stockValue.classList.add('text-red-600');
             } else {
+                // กลับเป็นสีปกติเมื่อสต็อคมีเพียงพอ
                 stockContainer.classList.remove('border-l-red-600', 'bg-red-50/90');
                 stockContainer.classList.add('border-l-amber-500', 'bg-white');
                 stockIcon.classList.remove('bg-red-600', 'text-white', 'animate-pulse', 'shadow-md', 'shadow-red-600/30');
@@ -1270,6 +1356,7 @@
             }
         }
 
+        /* --- ดึงข้อมูลและสร้าง Datalist --- */
         async function fetchMembersForDropdown() {
             if(!GOOGLE_APPS_SCRIPT_URL.startsWith("https://script.google.com")) return;
             try {
@@ -1335,6 +1422,7 @@
                 return; 
             }
 
+            // 🟢 ยืนยันรหัส PIN ก่อนแก้ไขหรือเพิ่มลูกค้า
             const isAuthorized = await verifyActionPin();
             if (!isAuthorized) return;
             
@@ -1381,6 +1469,7 @@
         async function deleteMember(row) {
             if(!confirm("ลบลูกค้าคนนี้หรือไม่?")) return;
 
+            // 🟢 ยืนยันรหัส PIN ก่อนลบลูกค้า
             const isAuthorized = await verifyActionPin();
             if (!isAuthorized) return;
 
@@ -1462,6 +1551,7 @@
             const editRow = document.getElementById('editRowIndex').value;
             if(!memberIdOnly || !document.getElementById('saleQty').value) return;
 
+            // 🟢 ยืนยันรหัส PIN ก่อนเพิ่มหรือแก้ไขรายการขาย
             const isAuthorized = await verifyActionPin();
             if (!isAuthorized) return;
 
@@ -1493,6 +1583,7 @@
         async function deleteSale(month, row) {
             if(!confirm("ลบรายการขายนี้?")) return;
 
+            // 🟢 ยืนยันรหัส PIN ก่อนลบรายการขาย
             const isAuthorized = await verifyActionPin();
             if (!isAuthorized) return;
 
@@ -1501,6 +1592,7 @@
             setTimeout(() => fetchSalesData(month), 1500);
         }
 
+        // 🟢 ฟังก์ชันดึงข้อมูลมาใส่กล่องทางซ้ายเพื่อแก้ไขสต็อคเข้า
         function openEditStockIn(logStr) {
             const data = JSON.parse(decodeURIComponent(logStr));
             document.getElementById('editStockInRowIndex').value = data.row;
@@ -1510,6 +1602,7 @@
             document.getElementById('submitStockInBtn').innerHTML = '<i class="fa-solid fa-pen mr-2"></i> บันทึกการแก้ไข';
         }
 
+        // 🟢 ฟังก์ชันลบรายการสต็อคเข้า
         async function deleteStockIn(month, row) {
             if(!confirm("ต้องการลบประวัติการรับยางล็อตนี้ใช่หรือไม่?")) return;
             const isAuthorized = await verifyActionPin();
@@ -1550,6 +1643,7 @@
             const qty = document.getElementById('stockInQty').value;
             if (!qty) return; 
 
+            // 🟢 ยืนยันรหัส PIN ก่อนเพิ่มสต็อค
             const isAuthorized = await verifyActionPin();
             if (!isAuthorized) return;
 
@@ -1580,202 +1674,510 @@
             } catch (e) {} finally { btn.disabled = false; }
         }
 
-        // 🟢 ฟังก์ชันคำนวณและดึงข้อมูล BI จากทุกเดือนมารวมกัน
-        async function fetchAndCalculateBI() {
-            if(!GOOGLE_APPS_SCRIPT_URL.startsWith("https://script.google.com")) return;
-            
-            document.getElementById('biLoadingState').classList.remove('hidden');
-            document.getElementById('biContent').classList.add('hidden');
+        /* =====================================================================
+           🟢 BUSINESS INTELLIGENCE (BI) MODULE
+           วิเคราะห์ RFM, การกลับมาซื้อซ้ำ, เติบโต/AOV, ช่องทางลูกค้า,
+           คิวติดตามลูกค้า, สุขภาพการรับประกัน และสรุป SWOT จากข้อมูลจริงในระบบ
+           ===================================================================== */
+
+        // ดึงรายชื่อเดือนทั้งหมดจากเมนู sidebar โดยตรง (เรียงตามลำดับที่ผู้ดูแลใส่ไว้จริง)
+        function getAllSalesMonths() {
+            return Array.from(document.querySelectorAll('[id^="nav-sales-"]')).map(el => el.id.replace('nav-sales-', ''));
+        }
+
+        // แปลงสตริงวันที่ (dd/mm/yy หรือ ISO) เป็น Date object อย่างปลอดภัย
+        function parseThaiDate(dateStr) {
+            if (!dateStr || dateStr === '-') return null;
+            try {
+                const s = String(dateStr);
+                if (s.includes('T') || (s.includes('-') && s.length >= 8 && !s.includes('/'))) {
+                    const d = new Date(s);
+                    return isNaN(d.getTime()) ? null : d;
+                }
+                const parts = s.split('/');
+                if (parts.length === 3) {
+                    const day = parseInt(parts[0], 10);
+                    const mon = parseInt(parts[1], 10) - 1;
+                    let yr = parseInt(parts[2], 10);
+                    if (yr < 100) yr += 2000;
+                    const d = new Date(yr, mon, day);
+                    return isNaN(d.getTime()) ? null : d;
+                }
+            } catch (e) { return null; }
+            return null;
+        }
+
+        // ดึงข้อมูลการขายทุกเดือนมารวมกันไว้ในก้อนเดียว สำหรับใช้คำนวณ BI
+        async function fetchAllSalesForBI() {
+            const months = getAllSalesMonths();
+            const results = await Promise.all(months.map(m =>
+                fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=getSales&month=${encodeURIComponent(m)}`)
+                    .then(r => r.json()).catch(() => ({ sales: [] }))
+            ));
+            let combined = [];
+            months.forEach((m, i) => {
+                const monthSales = (results[i] && results[i].sales) || [];
+                monthSales.forEach(s => combined.push(Object.assign({}, s, { _month: m })));
+            });
+            return { combined, months };
+        }
+
+        // ฟังก์ชันหลัก: โหลดข้อมูลทั้งหมด แล้วสั่ง render ทุกส่วนของหน้า BI
+        async function loadBIData(forceRefresh = false) {
+            if (biDataLoaded && !forceRefresh) { renderAllBI(); return; }
+
+            const loadingEl = document.getElementById('biLoadingState');
+            const contentEl = document.getElementById('biContent');
+            loadingEl.classList.remove('hidden');
+            contentEl.classList.add('hidden');
+
+            if (!GOOGLE_APPS_SCRIPT_URL.startsWith("https://script.google.com")) {
+                loadingEl.innerHTML = '<p class="text-rose-500 font-bold">⚠️ กรุณาตั้งค่า Web App URL ก่อนใช้งานหน้าวิเคราะห์ธุรกิจ</p>';
+                return;
+            }
 
             try {
-                // ต้องมีรายชื่อลูกค้าเพื่ออ้างอิง source (ช่องทางการขาย)
                 if (globalMembersList.length === 0) await fetchMembersForDropdown();
-
-                // ยิงรีเควสไปขอข้อมูลทุกเดือนที่ระบุ (เพื่อให้ได้ภาพรวมทั้งปี)
-                const monthsToFetch = ['พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม', 'มกราคม 70'];
-                const fetchPromises = monthsToFetch.map(m => 
-                    fetch(`${GOOGLE_APPS_SCRIPT_URL}?action=getSales&month=${m}`)
-                    .then(r => r.json())
-                    .catch(() => ({sales: []}))
-                );
-                
-                const allMonthsData = await Promise.all(fetchPromises);
-                
-                let allSales = [];
-                allMonthsData.forEach(res => {
-                    if (res && res.sales && res.sales.length > 0) {
-                        allSales = allSales.concat(res.sales);
-                    }
-                });
-
-                if(allSales.length === 0) {
-                    document.getElementById('biLoadingState').innerHTML = '<p class="text-slate-500 font-bold">ยังไม่มีข้อมูลรายการขายเพื่อนำมาวิเคราะห์</p>';
-                    return;
-                }
-
-                // เริ่มคำนวณตัวแปร
-                let totalRevenue = 0;
-                let totalOrders = allSales.length;
-                let customerPurchaseData = {}; 
-                let channelRevenue = { 'ออนไลน์': 0, 'ลงพื้นที่': 0, 'คนรู้จัก': 0 };
-
-                const parseDateStr = (dateStr) => {
-                    if(!dateStr) return new Date(0);
-                    if(dateStr.includes('T') || dateStr.includes('-')) return new Date(dateStr);
-                    const parts = dateStr.split('/');
-                    if(parts.length === 3) {
-                        let y = parseInt(parts[2], 10); if (y < 100) y += 2000;
-                        return new Date(y, parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
-                    }
-                    return new Date(0);
-                };
-
-                const today = new Date();
-
-                allSales.forEach(s => {
-                    const rev = Number(s.total) || 0;
-                    totalRevenue += rev;
-                    const mId = String(s.memberId).trim().split(' - ')[0]; 
-                    const saleDate = parseDateStr(s.saleDate);
-
-                    if(!customerPurchaseData[mId]) {
-                        customerPurchaseData[mId] = { frequency: 0, monetary: 0, lastPurchase: new Date(0) };
-                    }
-                    customerPurchaseData[mId].frequency += 1;
-                    customerPurchaseData[mId].monetary += rev;
-                    if(saleDate > customerPurchaseData[mId].lastPurchase) {
-                        customerPurchaseData[mId].lastPurchase = saleDate;
-                    }
-
-                    // หาช่องทางลูกค้า (Source)
-                    const memberInfo = globalMembersList.find(m => String(m.id).trim() === mId);
-                    if(memberInfo && memberInfo.source) {
-                        if(channelRevenue[memberInfo.source] !== undefined) {
-                            channelRevenue[memberInfo.source] += rev;
-                        }
-                    }
-                });
-
-                const uniqueCustomersCount = Object.keys(customerPurchaseData).length;
-                
-                // 1. AOV
-                const aov = totalOrders > 0 ? (totalRevenue / totalOrders) : 0;
-                // 2. CLV
-                const clvAvg = uniqueCustomersCount > 0 ? (totalRevenue / uniqueCustomersCount) : 0;
-                // 3. Retention Rate
-                let repeatCustomersCount = 0;
-                for (const mId in customerPurchaseData) {
-                    if (customerPurchaseData[mId].frequency > 1) repeatCustomersCount++;
-                }
-                const retentionRate = uniqueCustomersCount > 0 ? ((repeatCustomersCount / uniqueCustomersCount) * 100) : 0;
-
-                // ใส่ค่าขึ้นจอ
-                document.getElementById('biAov').innerText = '฿' + Math.round(aov).toLocaleString();
-                document.getElementById('biClv').innerText = '฿' + Math.round(clvAvg).toLocaleString();
-                document.getElementById('biRetention').innerText = retentionRate.toFixed(1) + '%';
-
-                // RFM & Churn Analysis
-                let rfmCounts = { 'VIP': 0, 'ขาประจำ': 0, 'เสี่ยงหาย': 0, 'หลุดลอย': 0 };
-                let churnListHtml = '';
-                let churnCount = 0;
-
-                for (const mId in customerPurchaseData) {
-                    const data = customerPurchaseData[mId];
-                    const recencyDays = Math.floor((today - data.lastPurchase) / (1000 * 60 * 60 * 24));
-                    
-                    if (recencyDays <= 45 && data.frequency >= 2 && data.monetary > aov) {
-                        rfmCounts['VIP']++;
-                    } else if (recencyDays <= 90) {
-                        rfmCounts['ขาประจำ']++;
-                    } else if (recencyDays > 90 && recencyDays <= 180) {
-                        rfmCounts['เสี่ยงหาย']++;
-                        churnCount++;
-                        const memberInfo = globalMembersList.find(m => String(m.id).trim() === mId);
-                        const mName = memberInfo ? memberInfo.name : 'ไม่ทราบชื่อ';
-                        const mPhone = memberInfo ? memberInfo.phone : '-';
-                        
-                        churnListHtml += `
-                            <div class="flex justify-between items-center bg-white p-3 rounded-xl mb-2 border border-rose-50 shadow-sm">
-                                <div>
-                                    <p class="text-xs font-bold text-slate-800">${mId} ${mName}</p>
-                                    <p class="text-[10px] text-slate-500">ซื้อล่าสุดเมื่อ ${recencyDays} วันที่แล้ว</p>
-                                </div>
-                                <a href="tel:${mPhone}" class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors shadow-sm">
-                                    <i class="fa-solid fa-phone text-xs"></i>
-                                </a>
-                            </div>
-                        `;
-                    } else {
-                        rfmCounts['หลุดลอย']++;
-                    }
-                }
-
-                document.getElementById('biChurnCountBadge').innerText = `${churnCount} ราย`;
-                if(churnCount > 0) {
-                    document.getElementById('biChurnList').innerHTML = churnListHtml;
-                } else {
-                    document.getElementById('biChurnList').innerHTML = `<p class="text-center text-xs text-slate-400 py-4 font-bold">🎉 ไม่มีลูกค้าในกลุ่มเสี่ยง (ยอดเยี่ยม!)</p>`;
-                }
-
-                // SWOT Insights Data Driven
-                let swotS = ""; let swotW = "";
-                if (retentionRate > 30) swotS = `อัตราการซื้อซ้ำสูงถึง ${retentionRate.toFixed(1)}% แสดงว่าคุณภาพสินค้าและการบริการรักษาลูกค้าเก่าได้ดีมาก`;
-                else if (rfmCounts['VIP'] > (uniqueCustomersCount * 0.1)) swotS = `มีกลุ่มลูกค้า VIP เหนียวแน่น ครองสัดส่วนช่วยพยุงรายได้หลักของร้านในสภาวะตลาดชะลอตัว`;
-                else swotS = `ลูกค้าส่วนใหญ่มียอดบิลต่อครั้งสูงกว่าค่าเฉลี่ยปกติ (AOV = ฿${Math.round(aov).toLocaleString()})`;
-
-                let channels = Object.keys(channelRevenue);
-                let topChannel = channels.reduce((a, b) => channelRevenue[a] > channelRevenue[b] ? a : b);
-                let weakChannel = channels.reduce((a, b) => channelRevenue[a] < channelRevenue[b] ? a : b);
-                
-                if (churnCount > (uniqueCustomersCount * 0.2)) swotW = `มีลูกค้ากว่า ${churnCount} รายขาดการติดต่อนานเกิน 90 วัน ควรให้ทีมขายรีบโทรตามเพื่ออัปเดตโปรโมชัน`;
-                else if (retentionRate < 10) swotW = `ลูกค้าซื้อครั้งเดียวแล้วหายไปเยอะมาก ควรเพิ่มระบบสะสมแต้ม หรือของแถมในการซื้อครั้งถัดไป`;
-                else if (channelRevenue[weakChannel] < (totalRevenue * 0.1)) swotW = `ช่องทาง "${weakChannel}" ทำรายได้น้อยมากเมื่อเทียบกับ "${topChannel}" อาจต้องปรับแผนการหาลูกค้าใหม่`;
-                else swotW = `ปัจจุบันข้อมูลภาพรวมยังอยู่ในเกณฑ์ที่สม่ำเสมอ ควรรักษามาตรฐานการโทรดูแลลูกค้า (Follow-up) เอาไว้`;
-
-                document.getElementById('biSwotS').innerText = swotS;
-                document.getElementById('biSwotW').innerText = swotW;
-
-                // วาดกราฟ Doughnut (RFM)
-                if (biRfmChartObj) biRfmChartObj.destroy();
-                biRfmChartObj = new Chart(document.getElementById('biRfmChart'), {
-                    type: 'doughnut',
-                    data: { 
-                        labels: ['VIP', 'ขาประจำ', 'เสี่ยงหาย', 'หลุดลอย'], 
-                        datasets: [{ 
-                            data: [rfmCounts['VIP'], rfmCounts['ขาประจำ'], rfmCounts['เสี่ยงหาย'], rfmCounts['หลุดลอย']], 
-                            backgroundColor: ['#facc15', '#94a3b8', '#f43f5e', '#1e293b'], 
-                            borderWidth: 0, hoverOffset: 4 
-                        }] 
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: {font: {family: "'Sarabun', sans-serif", weight: 'bold'}, boxWidth: 15, padding: 15}} } }
-                });
-
-                // วาดกราฟ Bar (Channels)
-                if (biChannelChartObj) biChannelChartObj.destroy();
-                biChannelChartObj = new Chart(document.getElementById('biChannelChart'), {
-                    type: 'bar',
-                    data: { 
-                        labels: ['ออนไลน์', 'ลงพื้นที่', 'คนรู้จัก'], 
-                        datasets: [{ 
-                            data: [channelRevenue['ออนไลน์'], channelRevenue['ลงพื้นที่'], channelRevenue['คนรู้จัก']], 
-                            backgroundColor: ['#facc15', '#1e293b', '#f8fafc'], // เหลือง, ดำ, เทาอ่อน
-                            borderColor: ['#facc15', '#1e293b', '#cbd5e1'],
-                            borderWidth: 1,
-                            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 } 
-                        }] 
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { borderDash: [4, 4] } } } }
-                });
-
-                // ปิดกล่อง Loading เผยกล่องคอนเทนต์
-                document.getElementById('biLoadingState').classList.add('hidden');
-                document.getElementById('biContent').classList.remove('hidden');
-                isBiDataLoaded = true;
-
-            } catch (error) {
-                console.error("BI Calculation Error:", error);
-                document.getElementById('biLoadingState').innerHTML = `<p class="text-rose-500 font-bold">เกิดข้อผิดพลาดในการประมวลผลข้อมูล</p><p class="text-xs text-slate-500 mt-2">${error.message}</p>`;
+                const { combined, months } = await fetchAllSalesForBI();
+                biAllSales = combined;
+                biMonthsOrder = months;
+                biDataLoaded = true;
+                renderAllBI();
+                loadingEl.classList.add('hidden');
+                contentEl.classList.remove('hidden');
+            } catch (e) {
+                console.error("BI Load Error:", e);
+                loadingEl.innerHTML = '<p class="text-rose-500 font-bold">❌ เกิดข้อผิดพลาดในการประมวลผลข้อมูล</p>';
             }
+        }
+
+        function renderAllBI() {
+            const rfmRows = computeRFM(biAllSales, globalMembersList);
+            const monthly = computeMonthlyStats(biAllSales, biMonthsOrder);
+            const channelStats = computeChannelROI(biAllSales, globalMembersList);
+            const followups = computeFollowupPipeline(biAllSales, globalMembersList);
+            const warranty = computeWarrantyHealth(biAllSales, globalMembersList);
+
+            renderBIKpis(rfmRows, monthly, followups);
+            renderRFMSection(rfmRows);
+            renderGrowthAovChart(monthly);
+            renderChannelChart(channelStats);
+            renderFollowupList(followups);
+            renderWarrantyTable(warranty);
+            renderSWOTCards(rfmRows, monthly, channelStats, followups);
+            renderMarketNotes();
+        }
+
+        /* --- A1: RFM Customer Segmentation ---
+           เกณฑ์แบ่งกลุ่ม (ปรับได้ตามความเหมาะสมของร้าน):
+           - VIP: ซื้อ 3 ครั้งขึ้นไป และซื้อล่าสุดไม่เกิน 90 วัน
+           - ลูกค้าประจำ: ซื้อ 2 ครั้งขึ้นไป และซื้อล่าสุดไม่เกิน 90 วัน
+           - ลูกค้าใหม่: ซื้อครั้งเดียว และซื้อล่าสุดไม่เกิน 90 วัน
+           - เสี่ยงหาย: ไม่ซื้อซ้ำมา 91-180 วัน
+           - หายไปแล้ว: ไม่ซื้อซ้ำมาเกิน 180 วัน */
+        function computeRFM(allSales, members) {
+            const today = new Date();
+            const byMember = {};
+            allSales.forEach(s => {
+                const id = String(s.memberId || '').trim();
+                if (!id) return;
+                const d = parseThaiDate(s.saleDate);
+                if (!byMember[id]) byMember[id] = { orders: [], totalSpent: 0 };
+                if (d) byMember[id].orders.push(d);
+                byMember[id].totalSpent += Number(s.total) || 0;
+            });
+
+            const rows = [];
+            Object.keys(byMember).forEach(id => {
+                const rec = byMember[id];
+                if (rec.orders.length === 0) return;
+                const lastDate = new Date(Math.max.apply(null, rec.orders.map(d => d.getTime())));
+                const recencyDays = Math.floor((today - lastDate) / (1000 * 60 * 60 * 24));
+                const frequency = rec.orders.length;
+                const monetary = rec.totalSpent;
+                const member = members.find(m => String(m.id).trim() === id);
+
+                let segment = 'newCust';
+                if (recencyDays > 180) segment = 'lost';
+                else if (recencyDays > 90) segment = 'atRisk';
+                else if (frequency >= 3) segment = 'vip';
+                else if (frequency >= 2) segment = 'regular';
+
+                rows.push({
+                    id, name: member ? member.name : id, phone: member ? member.phone : '',
+                    recencyDays, frequency, monetary, segment
+                });
+            });
+            return rows;
+        }
+
+        const SEGMENT_META = {
+            vip:     { label: 'VIP',         color: '#eab308' },
+            regular: { label: 'ลูกค้าประจำ',  color: '#1e293b' },
+            newCust: { label: 'ลูกค้าใหม่',   color: '#38bdf8' },
+            atRisk:  { label: 'เสี่ยงหาย',    color: '#f97316' },
+            lost:    { label: 'หายไปแล้ว',    color: '#e11d48' }
+        };
+
+        function renderRFMSection(rows) {
+            const counts = { vip: 0, regular: 0, newCust: 0, atRisk: 0, lost: 0 };
+            rows.forEach(r => counts[r.segment]++);
+
+            const canvas = document.getElementById('rfmChart');
+            if (canvas) {
+                if (rfmChartObj) rfmChartObj.destroy();
+                rfmChartObj = new Chart(canvas.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(SEGMENT_META).map(k => SEGMENT_META[k].label),
+                        datasets: [{
+                            data: Object.keys(SEGMENT_META).map(k => counts[k]),
+                            backgroundColor: Object.keys(SEGMENT_META).map(k => SEGMENT_META[k].color),
+                            borderWidth: 0, hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, cutout: '70%',
+                        plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { family: "'Sarabun', sans-serif", size: 10, weight: 'bold' } } } }
+                    }
+                });
+            }
+
+            const atRiskRows = rows.filter(r => r.segment === 'atRisk' || r.segment === 'lost')
+                .sort((a, b) => b.recencyDays - a.recencyDays);
+
+            const tbody = document.getElementById('rfmAtRiskBody');
+            if (!tbody) return;
+            if (atRiskRows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-slate-400">ไม่มีลูกค้าที่เสี่ยงหายตอนนี้ 🎉</td></tr>';
+                return;
+            }
+            tbody.innerHTML = atRiskRows.slice(0, 30).map(r => {
+                let phone = r.phone ? String(r.phone).trim() : '';
+                if (phone.length === 9 && !phone.startsWith('0') && /^\d+$/.test(phone)) phone = '0' + phone;
+                const badge = r.segment === 'lost' ? 'bg-rose-100 text-rose-700' : 'bg-orange-100 text-orange-700';
+                return `<tr class="hover:bg-slate-50 transition-colors border-b border-slate-200/50 last:border-0">
+                    <td class="px-4 py-3">
+                        <div class="font-bold text-slate-800">${r.name}</div>
+                        <span class="${badge} text-[10px] font-black px-2 py-0.5 rounded-md uppercase inline-block mt-0.5">${SEGMENT_META[r.segment].label}</span>
+                    </td>
+                    <td class="px-4 py-3 text-slate-500">${r.recencyDays} วันก่อน</td>
+                    <td class="px-4 py-3 text-center font-bold">${r.frequency}</td>
+                    <td class="px-4 py-3 font-bold text-slate-700">${r.monetary.toLocaleString()}</td>
+                    <td class="px-4 py-3 text-center">${phone ? `<a href="tel:${phone}" class="text-emerald-500 hover:text-emerald-600 text-lg"><i class="fa-solid fa-phone"></i></a>` : '-'}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        /* --- A3: Growth & AOV (คำนวณรายเดือนจากข้อมูลการขายจริงทุกรายการ) --- */
+        function computeMonthlyStats(allSales, months) {
+            const revenue = months.map(() => 0);
+            const orders = months.map(() => 0);
+            months.forEach((m, i) => {
+                allSales.filter(s => s._month === m).forEach(s => {
+                    revenue[i] += Number(s.total) || 0;
+                    orders[i] += 1;
+                });
+            });
+            const aov = revenue.map((r, i) => orders[i] > 0 ? Math.round(r / orders[i]) : 0);
+            return { months, revenue, orders, aov };
+        }
+
+        function renderGrowthAovChart(monthly) {
+            const canvas = document.getElementById('growthAovChart');
+            if (!canvas) return;
+            if (growthAovChartObj) growthAovChartObj.destroy();
+            growthAovChartObj = new Chart(canvas.getContext('2d'), {
+                data: {
+                    labels: monthly.months,
+                    datasets: [
+                        { type: 'bar', label: 'ยอดขาย (บาท)', data: monthly.revenue, backgroundColor: '#facc15', borderRadius: 8, yAxisID: 'y', order: 2 },
+                        { type: 'line', label: 'AOV (บาท/บิล)', data: monthly.aov, borderColor: '#1e293b', backgroundColor: '#1e293b', tension: 0.4, yAxisID: 'y1', order: 1 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { position: 'left', title: { display: true, text: 'ยอดขาย (บาท)', font: { size: 10 } } },
+                        y1: { position: 'right', title: { display: true, text: 'AOV (บาท)', font: { size: 10 } }, grid: { drawOnChartArea: false } }
+                    }
+                }
+            });
+        }
+
+        /* --- B1: Channel ROI --- */
+        function computeChannelROI(allSales, members) {
+            const memberSource = {};
+            members.forEach(m => memberSource[String(m.id).trim()] = m.source || 'ไม่ระบุ');
+
+            const memberOrderCount = {};
+            allSales.forEach(s => {
+                const id = String(s.memberId || '').trim();
+                memberOrderCount[id] = (memberOrderCount[id] || 0) + 1;
+            });
+
+            const channels = {};
+            allSales.forEach(s => {
+                const id = String(s.memberId || '').trim();
+                const src = memberSource[id] || 'ไม่ระบุ';
+                if (!channels[src]) channels[src] = { revenue: 0, orders: 0, customers: new Set() };
+                channels[src].revenue += Number(s.total) || 0;
+                channels[src].orders += 1;
+                channels[src].customers.add(id);
+            });
+            Object.keys(channels).forEach(src => {
+                let repeatCount = 0;
+                channels[src].customers.forEach(id => { if ((memberOrderCount[id] || 0) >= 2) repeatCount++; });
+                channels[src].customerCount = channels[src].customers.size;
+                channels[src].repeatRate = channels[src].customerCount ? (repeatCount / channels[src].customerCount * 100) : 0;
+            });
+            return channels;
+        }
+
+        function renderChannelChart(channelStats) {
+            const canvas = document.getElementById('channelChart');
+            if (!canvas) return;
+            const labels = Object.keys(channelStats);
+            if (channelChartObj) channelChartObj.destroy();
+            channelChartObj = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'รายได้ (บาท)', data: labels.map(l => channelStats[l].revenue), backgroundColor: '#facc15', borderRadius: 6, yAxisID: 'y' },
+                        { label: 'กลับมาซื้อซ้ำ (%)', data: labels.map(l => Math.round(channelStats[l].repeatRate)), backgroundColor: '#1e293b', borderRadius: 6, yAxisID: 'y1' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        y: { position: 'left', title: { display: true, text: 'รายได้ (บาท)', font: { size: 10 } } },
+                        y1: { position: 'right', title: { display: true, text: '% ซื้อซ้ำ', font: { size: 10 } }, grid: { drawOnChartArea: false }, max: 100 }
+                    }
+                }
+            });
+        }
+
+        /* --- A4: Follow-up Pipeline (ติดตามลูกค้าซ้ำ) --- */
+        function computeFollowupPipeline(allSales, members) {
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            const list = [];
+            allSales.forEach(s => {
+                const d = parseThaiDate(s.followup);
+                if (!d) return;
+                const diffDays = Math.round((d - today) / (1000 * 60 * 60 * 24));
+                if (diffDays > 14) return; // แสดงเฉพาะที่ใกล้ถึงกำหนดหรือเลยกำหนดแล้ว
+                const member = members.find(m => String(m.id).trim() === String(s.memberId).trim());
+                list.push({
+                    name: member ? member.name : s.memberId,
+                    phone: member ? member.phone : '',
+                    diffDays
+                });
+            });
+            return list.sort((a, b) => a.diffDays - b.diffDays);
+        }
+
+        function renderFollowupList(list) {
+            const container = document.getElementById('followupList');
+            if (!container) return;
+            if (list.length === 0) {
+                container.innerHTML = '<p class="text-center text-slate-400 py-8">ไม่มีคิวติดตามลูกค้าในช่วงนี้</p>';
+                return;
+            }
+            container.innerHTML = list.slice(0, 20).map(item => {
+                let phone = item.phone ? String(item.phone).trim() : '';
+                if (phone.length === 9 && !phone.startsWith('0') && /^\d+$/.test(phone)) phone = '0' + phone;
+                const overdue = item.diffDays < 0;
+                const statusText = overdue ? `เลยกำหนด ${Math.abs(item.diffDays)} วัน` : (item.diffDays === 0 ? 'ถึงกำหนดวันนี้' : `อีก ${item.diffDays} วัน`);
+                const statusClass = overdue ? 'bg-rose-100 text-rose-700' : (item.diffDays <= 3 ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600');
+                return `<div class="flex items-center justify-between p-3 rounded-xl border border-slate-100 ${overdue ? 'bg-rose-50/50' : ''}">
+                    <div>
+                        <p class="font-bold text-slate-800 text-sm">${item.name}</p>
+                        <span class="${statusClass} text-[10px] font-black px-2 py-0.5 rounded-md inline-block mt-0.5">${statusText}</span>
+                    </div>
+                    ${phone ? `<a href="tel:${phone}" class="w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 hover:bg-emerald-200 transition-colors"><i class="fa-solid fa-phone"></i></a>` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        /* --- A5: Warranty Health (สุขภาพการรับประกัน) --- */
+        function computeWarrantyHealth(allSales, members) {
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            const list = [];
+            allSales.forEach(s => {
+                const d = parseThaiDate(s.claimDate);
+                if (!d) return;
+                const diffDays = Math.round((d - today) / (1000 * 60 * 60 * 24));
+                if (diffDays < 0 || diffDays > 30) return; // แสดงเฉพาะที่ใกล้ครบภายใน 30 วัน
+                const member = members.find(m => String(m.id).trim() === String(s.memberId).trim());
+                list.push({ name: member ? member.name : s.memberId, saleDate: s.saleDate, claimDate: s.claimDate, diffDays });
+            });
+            return list.sort((a, b) => a.diffDays - b.diffDays);
+        }
+
+        function renderWarrantyTable(list) {
+            const badge = document.getElementById('biWarrantyBadge');
+            if (badge) badge.innerText = `${list.length} เคสใกล้ครบ`;
+            const tbody = document.getElementById('warrantyBody');
+            if (!tbody) return;
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-slate-400">ไม่มีเคสที่ใกล้ครบเครมภายใน 30 วัน</td></tr>';
+                return;
+            }
+            tbody.innerHTML = list.map(item => `
+                <tr class="hover:bg-slate-50 transition-colors border-b border-slate-200/50 last:border-0">
+                    <td class="px-4 py-3 font-bold text-slate-800">${item.name}</td>
+                    <td class="px-4 py-3 text-slate-500">${formatDateString(item.saleDate)}</td>
+                    <td class="px-4 py-3 text-slate-500">${formatDateString(item.claimDate)}</td>
+                    <td class="px-4 py-3 text-center font-bold ${item.diffDays <= 7 ? 'text-rose-600' : 'text-slate-700'}">${item.diffDays} วัน</td>
+                </tr>
+            `).join('');
+        }
+
+        /* --- KPI สรุปด้านบนสุดของหน้า BI --- */
+        function renderBIKpis(rfmRows, monthly, followups) {
+            const totalCustomersWithOrders = rfmRows.length;
+            const repeatCustomers = rfmRows.filter(r => r.frequency >= 2).length;
+            const repeatRate = totalCustomersWithOrders ? Math.round(repeatCustomers / totalCustomersWithOrders * 100) : 0;
+            document.getElementById('biRepeatRate').innerText = repeatRate + '%';
+
+            const atRiskCount = rfmRows.filter(r => r.segment === 'atRisk' || r.segment === 'lost').length;
+            document.getElementById('biAtRiskCount').innerText = atRiskCount;
+
+            const lastIdx = monthly.revenue.length - 1;
+            let growthText = '-';
+            if (lastIdx > 0 && monthly.revenue[lastIdx - 1] > 0) {
+                const growth = ((monthly.revenue[lastIdx] - monthly.revenue[lastIdx - 1]) / monthly.revenue[lastIdx - 1]) * 100;
+                growthText = (growth >= 0 ? '+' : '') + Math.round(growth) + '%';
+            }
+            document.getElementById('biGrowthRate').innerText = growthText;
+
+            const totalRevenue = monthly.revenue.reduce((a, b) => a + b, 0);
+            const totalOrders = monthly.orders.reduce((a, b) => a + b, 0);
+            document.getElementById('biAOV').innerText = totalOrders ? Math.round(totalRevenue / totalOrders).toLocaleString() : '0';
+
+            const overdueCount = followups.filter(f => f.diffDays < 0).length;
+            document.getElementById('biOverdueFollowup').innerText = overdueCount;
+        }
+
+        /* --- B2: Data-driven SWOT Insight Cards ---
+           สรุปจากตัวเลขที่คำนวณได้จริงในระบบเท่านั้น ไม่มีการอ้างอิงค่ามาตรฐานอุตสาหกรรมภายนอก */
+        function renderSWOTCards(rfmRows, monthly, channelStats, followups) {
+            const container = document.getElementById('swotCardsContainer');
+            if (!container) return;
+
+            const cards = [];
+            const channelKeys = Object.keys(channelStats).filter(k => channelStats[k].customerCount > 0);
+
+            // จุดแข็ง: ช่องทางที่มีอัตรากลับมาซื้อซ้ำสูงสุด
+            if (channelKeys.length > 0) {
+                const best = channelKeys.reduce((a, b) => channelStats[a].repeatRate >= channelStats[b].repeatRate ? a : b);
+                cards.push({
+                    type: 'strength', title: 'จุดแข็ง',
+                    text: `ลูกค้าจากช่องทาง "${best}" กลับมาซื้อซ้ำสูงสุดที่ ${Math.round(channelStats[best].repeatRate)}% ควรรักษาคุณภาพช่องทางนี้ไว้ และศึกษาว่าอะไรทำให้ลูกค้ากลุ่มนี้กลับมาซื้อซ้ำ`
+                });
+            }
+
+            // จุดอ่อน: สัดส่วนลูกค้าเสี่ยงหาย/หายไปแล้ว
+            const atRiskCount = rfmRows.filter(r => r.segment === 'atRisk' || r.segment === 'lost').length;
+            const atRiskPct = rfmRows.length ? Math.round(atRiskCount / rfmRows.length * 100) : 0;
+            cards.push({
+                type: 'weakness', title: 'จุดอ่อน',
+                text: atRiskCount > 0
+                    ? `มีลูกค้า ${atRiskCount} ราย (${atRiskPct}% ของฐานลูกค้าที่เคยซื้อ) ไม่ได้ซื้อซ้ำเกิน 90 วัน ควรจัดแคมเปญติดต่อกลับกลุ่มนี้ก่อนหายไปถาวร`
+                    : `ฐานลูกค้าปัจจุบันยังไม่มีสัญญาณลูกค้าหลุดที่ชัดเจน แต่ควรติดตามตัวเลขนี้ต่อเนื่องทุกเดือน`
+            });
+
+            // โอกาส: ช่องทางที่สร้างรายได้เฉลี่ยต่อลูกค้าสูงสุด
+            if (channelKeys.length > 1) {
+                const byRevPerCustomer = channelKeys.map(k => ({ k, v: channelStats[k].revenue / channelStats[k].customerCount }));
+                byRevPerCustomer.sort((a, b) => b.v - a.v);
+                const top = byRevPerCustomer[0];
+                cards.push({
+                    type: 'opportunity', title: 'โอกาส',
+                    text: `ลูกค้าจากช่องทาง "${top.k}" มีรายได้เฉลี่ยต่อคนสูงสุด (${Math.round(top.v).toLocaleString()} บาท/คน) หากขยายจำนวนลูกค้าจากช่องทางนี้ได้ อาจช่วยเพิ่มรายได้รวมอย่างมีประสิทธิภาพ`
+                });
+            }
+
+            // ความเสี่ยง: ยอดขายลดลง หรือมีนัดติดตามเลยกำหนดจำนวนมาก
+            const lastIdx = monthly.revenue.length - 1;
+            const overdueCount = followups.filter(f => f.diffDays < 0).length;
+            let threatText;
+            if (lastIdx > 0 && monthly.revenue[lastIdx - 1] > 0 && monthly.revenue[lastIdx] < monthly.revenue[lastIdx - 1]) {
+                const drop = Math.round((1 - monthly.revenue[lastIdx] / monthly.revenue[lastIdx - 1]) * 100);
+                threatText = `ยอดขายเดือนล่าสุดลดลง ${drop}% จากเดือนก่อนหน้า ควรตรวจสอบสาเหตุ เช่น สต็อกขาด หรือคู่แข่งมีโปรโมชัน`;
+            } else if (overdueCount > 0) {
+                threatText = `มีนัดติดตามลูกค้าที่เลยกำหนดแล้ว ${overdueCount} ราย หากปล่อยไว้เสี่ยงเสียลูกค้าให้คู่แข่ง`;
+            } else {
+                threatText = `ยังไม่พบสัญญาณความเสี่ยงชัดเจนจากข้อมูลภายใน ลองกรอกข้อมูลคู่แข่งด้านล่างเพื่อประเมินความเสี่ยงจากภายนอกเพิ่มเติม`;
+            }
+            cards.push({ type: 'threat', title: 'ความเสี่ยง', text: threatText });
+
+            const styleMap = {
+                strength: 'border-l-emerald-500 bg-emerald-50/40',
+                weakness: 'border-l-rose-500 bg-rose-50/40',
+                opportunity: 'border-l-sky-500 bg-sky-50/40',
+                threat: 'border-l-amber-500 bg-amber-50/40'
+            };
+            const iconMap = { strength: 'fa-thumbs-up', weakness: 'fa-thumbs-down', opportunity: 'fa-lightbulb', threat: 'fa-triangle-exclamation' };
+            const textColorMap = { strength: 'text-emerald-700', weakness: 'text-rose-700', opportunity: 'text-sky-700', threat: 'text-amber-700' };
+
+            container.innerHTML = cards.map(c => `
+                <div class="glass-card rounded-2xl p-6 border-l-4 ${styleMap[c.type]}">
+                    <div class="flex items-center mb-2 ${textColorMap[c.type]}">
+                        <i class="fa-solid ${iconMap[c.type]} mr-2"></i>
+                        <span class="font-black text-sm uppercase tracking-wide">${c.title}</span>
+                    </div>
+                    <p class="text-sm text-slate-700 leading-relaxed">${c.text}</p>
+                </div>
+            `).join('');
+        }
+
+        /* --- B3: บันทึกข้อมูลตลาด/คู่แข่งด้วยมือ (เก็บในเครื่องนี้ผ่าน localStorage เท่านั้น) --- */
+        function getMarketNotes() {
+            try { return JSON.parse(localStorage.getItem('saraburi_market_notes') || '[]'); }
+            catch (e) { return []; }
+        }
+        function saveMarketNotesToStorage(notes) {
+            localStorage.setItem('saraburi_market_notes', JSON.stringify(notes));
+        }
+        function addMarketNote() {
+            const competitor = document.getElementById('marketNoteCompetitor').value.trim();
+            const price = document.getElementById('marketNotePrice').value.trim();
+            const reason = document.getElementById('marketNoteReason').value.trim();
+            if (!competitor && !price && !reason) return;
+            const notes = getMarketNotes();
+            notes.unshift({ competitor, price, reason, date: new Date().toLocaleDateString('th-TH') });
+            saveMarketNotesToStorage(notes);
+            document.getElementById('marketNoteCompetitor').value = '';
+            document.getElementById('marketNotePrice').value = '';
+            document.getElementById('marketNoteReason').value = '';
+            renderMarketNotes();
+        }
+        function deleteMarketNote(index) {
+            const notes = getMarketNotes();
+            notes.splice(index, 1);
+            saveMarketNotesToStorage(notes);
+            renderMarketNotes();
+        }
+        function renderMarketNotes() {
+            const container = document.getElementById('marketNotesList');
+            if (!container) return;
+            const notes = getMarketNotes();
+            if (notes.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-400">ยังไม่มีข้อมูลที่บันทึกไว้</p>';
+                return;
+            }
+            container.innerHTML = notes.map((n, i) => `
+                <div class="flex items-start justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <div class="text-sm">
+                        <p class="font-bold text-slate-800">${n.competitor || '-'} <span class="text-slate-400 font-normal text-xs ml-2">${n.date}</span></p>
+                        ${n.price ? `<p class="text-slate-600 mt-0.5">ราคา/โปรโมชัน: ${n.price}</p>` : ''}
+                        ${n.reason ? `<p class="text-slate-600 mt-0.5">${n.reason}</p>` : ''}
+                    </div>
+                    <button onclick="deleteMarketNote(${i})" class="text-slate-300 hover:text-rose-500 transition-colors flex-shrink-0 ml-3"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
         }
     </script>
 </body>
